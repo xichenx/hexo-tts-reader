@@ -1,0 +1,57 @@
+{
+  "name": "hexo-tts-reader",
+  "version": "0.1.0",
+  "description": "A Hexo plugin that reads your posts aloud. Builds MP3 audio for each post at generate-time using Edge TTS, and injects a floating player into post pages.",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib/",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "keywords": [
+    "hexo",
+    "hexo-plugin",
+    "tts",
+    "text-to-speech",
+    "edge-tts",
+    "reader",
+    "accessibility",
+    "audio"
+  ],
+  "author": {
+    "name": "刘明智",
+    "email": "xichen.dev@gmail.com",
+    "url": "https://github.com/xichenx"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "msedge-tts": "^1.3.4"
+  },
+  "peerDependencies": {
+    "hexo": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "hexo": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xichenx/hexo-tts-reader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xichenx/hexo-tts-reader/issues"
+  },
+  "homepage": "https://github.com/xichenx/hexo-tts-reader#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
