@@ -98,6 +98,9 @@ so renames and minor edits regenerate only the affected posts.
 ## Notes & limitations
 
 - Synthesis happens at build time and needs network access to Edge TTS.
+- Requires `msedge-tts` >= 2.0.5 (bundled with this plugin). Microsoft changed
+  the Edge Read Aloud API in late 2025; older clients receive an HTML error
+  page instead of audio.
 - Each post becomes one MP3; very long posts are chunked and concatenated.
 - If TTS fails for a post and `failOnError` is `false` (default), the player
   is simply not injected for that post and the build continues.
