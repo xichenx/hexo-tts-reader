@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hexo-tts-reader · UI 预览</title>
+  <script>
+    // 预览专用：每次加载都带唯一时间戳，彻底避免浏览器缓存旧资源
+    document.write(
+      '<link rel="stylesheet" href="assets/reader.css?t=' + Date.now() + '">'
+    );
+  </script>
+  <style>
+    :root {
+      --page-bg: #f6f7fb;
+      --page-fg: #1f2937;
+      --page-muted: #6b7280;
+      --card-bg: #ffffff;
+      --card-border: #e5e7eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page-bg: #0f1320;
+        --page-fg: #e5e7eb;
+        --page-muted: #9ca3af;
+        --card-bg: #161b2c;
+        --card-border: #2a3149;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--page-bg);
+      color: var(--page-fg);
+      line-height: 1.75;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 120px;
+    }
+    h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.01em; }
+    .sub { color: var(--page-muted); margin: 0 0 28px; }
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 28px;
+    }
+    .panel-card h2 { font-size: 15px; margin: 0 0 12px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; }
+    .controls button {
+      border: 1px solid var(--card-border);
+      background: transparent;
+      color: inherit;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .controls button:hover { background: rgba(127, 127, 127, 0.12); }
+    .controls button.active {
+      border-color: #4f46e5;
+      color: #4f46e5;
+      font-weight: 600;
+    }
+    article p { margin: 0 0 18px; }
+    .hint { color: var(--page-muted); font-size: 13px; }
+    code {
+      background: rgba(127, 127, 127, 0.16);
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>hexo-tts-reader</h1>
+    <p class="sub">悬浮朗读播放器 · UI 预览</p>
+
+    <div class="panel-card">
+      <h2>位置（data-position）</h2>
+      <div class="controls" id="position-controls">
+        <button data-pos="bottom-right" class="active">右下</button>
+        <button data-pos="bottom-left">左下</button>
+        <button data-pos="top-right">右上</button>
+        <button data-pos="top-left">左上</button>
+      </div>
+      <p class="hint" style="margin-top:14px;margin-bottom:0;">
+        切换深色模式请使用系统外观设置（页面与播放器都会跟随
+        <code>prefers-color-scheme</code>）。
+      </p>
+    </div>
+
+    <article>
+      <p>这是一段示例正文，用来演示 hexo-tts-reader 在文章页中的真实呈现效果。播放器常驻在页面角落，无需点击展开，直接点播放即可朗读本文。</p>
+      <p>新版面板采用毛玻璃背景与圆角卡片，顶部显示文章标题，进度条会随播放实时填充，速度切换改为分段胶囊按钮，整体观感更现代。</p>
+      <p>播放器的所有交互——播放/暂停、拖动进度、调整倍速、展开/收起——都可以在本预览页直接体验。下方音频为公开测试样例，便于验证真实播放与进度。</p>
+      <p>滚动页面、缩放窗口或在移动端查看，可以观察播放器的固定定位与响应式表现。</p>
+    </article>
+
+    <!-- 播放器：与 lib/injector.js buildPlayerMarkup 输出保持一致 -->
+    <div class="hexo-reader" data-position="bottom-right" data-audio="https://www.w3schools.com/html/horse.mp3" data-title="hexo-tts-reader 新版 UI 预览">
+      <div class="hexo-reader__panel" role="group" aria-label="文章朗读">
+        <button type="button" class="hexo-reader__play" aria-label="播放">
+          <svg class="hexo-reader__icon-play" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          <svg class="hexo-reader__icon-pause" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+        </button>
+        <div class="hexo-reader__body">
+          <div class="hexo-reader__header">
+            <span class="hexo-reader__title" title="hexo-tts-reader 新版 UI 预览">hexo-tts-reader 新版 UI 预览</span>
+          </div>
+          <div class="hexo-reader__progress">
+            <input type="range" class="hexo-reader__seek" min="0" max="1000" value="0" step="1" aria-label="进度" />
+            <span class="hexo-reader__time" aria-live="off">0:00 / 0:00</span>
+          </div>
+          <div class="hexo-reader__speed">
+            <span class="hexo-reader__speed-label">速度</span>
+            <div class="hexo-reader__rates" role="group" aria-label="播放速度">
+              <button type="button" class="hexo-reader__rate" data-rate="0.75" aria-pressed="false">0.75x</button>
+              <button type="button" class="hexo-reader__rate" data-rate="1" aria-pressed="true">1x</button>
+              <button type="button" class="hexo-reader__rate" data-rate="1.25" aria-pressed="false">1.25x</button>
+              <button type="button" class="hexo-reader__rate" data-rate="1.5" aria-pressed="false">1.5x</button>
+              <button type="button" class="hexo-reader__rate" data-rate="2" aria-pressed="false">2x</button>
+            </div>
+          </div>
+        </div>
+        <audio class="hexo-reader__audio" preload="none" src="https://www.w3schools.com/html/horse.mp3"></audio>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var s = document.createElement('script');
+      s.src = 'assets/reader.js?t=' + Date.now();
+      document.body.appendChild(s);
+    })();
+  </script>
+  <script>
+    // 仅用于预览：切换播放器定位
+    var reader = document.querySelector('.hexo-reader');
+    var btns = document.querySelectorAll('#position-controls button');
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        reader.setAttribute('data-position', btn.getAttribute('data-pos'));
+        btns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
