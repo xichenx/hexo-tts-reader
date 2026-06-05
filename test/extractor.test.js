@@ -116,11 +116,21 @@ test('buildPlayerMarkup escapes attributes', () => {
     audioUrl: '/a"b.mp3',
     position: 'bottom-right',
     buttonLabel: '<x>',
-    postTitle: '"t"'
+    postTitle: '<t>"q"'
   });
   assert.ok(html.includes('&quot;b.mp3'));
-  assert.ok(html.includes('&lt;x&gt;'));
+  assert.ok(html.includes('&lt;t&gt;&quot;q&quot;'));
   assert.ok(html.includes('data-position="bottom-right"'));
+});
+
+test('buildPlayerMarkup falls back to escaped label when no title', () => {
+  const html = buildPlayerMarkup({
+    audioUrl: '/a.mp3',
+    position: 'bottom-right',
+    buttonLabel: '<x>',
+    postTitle: ''
+  });
+  assert.ok(html.includes('&lt;x&gt;'));
 });
 
 test('AudioCache rejects invalid keys', () => {
