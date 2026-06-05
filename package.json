@@ -1,6 +1,6 @@
 {
   "name": "hexo-tts-reader",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "A Hexo plugin that reads your posts aloud. Builds MP3 audio for each post at generate-time using Edge TTS, and injects a floating player into post pages.",
   "main": "index.js",
   "files": [

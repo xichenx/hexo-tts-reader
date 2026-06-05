@@ -7,6 +7,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const { ReaderPipeline, READER_JS_ROUTE, READER_CSS_ROUTE } = require('../lib/injector');
+const { registerSiteAssets } = require('../lib/injectSiteAssets');
 const { registerGenerator } = require('../lib/generator');
 const { registerTag, PLACEHOLDER } = require('../lib/tag');
 const { resolveConfig } = require('../lib/config');
@@ -15,6 +16,7 @@ function makeFakeHexo(baseDir) {
   const filters = {};
   const generators = {};
   const tags = {};
+  const injectorStore = { head_end: { default: new Set() }, body_end: { default: new Set() } };
   return {
     base_dir: baseDir,
     config: { root: '/' },
@@ -22,11 +24,25 @@ function makeFakeHexo(baseDir) {
     extend: {
       filter: { register(name, fn) { filters[name] = fn; } },
       generator: { register(name, fn) { generators[name] = fn; } },
-      tag: { register(name, fn) { tags[name] = fn; } }
+      tag: { register(name, fn) { tags[name] = fn; } },
+      injector: {
+        register(entry, value, to = 'default') {
+          const bucket = injectorStore[entry] || injectorStore.head_end;
+          if (!bucket[to]) {
+            bucket[to] = new Set();
+          }
+          bucket[to].add(value);
+        },
+        getText(entry, to = 'default') {
+          const set = injectorStore[entry] && injectorStore[entry][to];
+          return set ? Array.from(set).join('') : '';
+        }
+      }
     },
     _filters: filters,
     _generators: generators,
-    _tags: tags
+    _tags: tags,
+    _injectorStore: injectorStore
   };
 }
 
@@ -95,7 +111,7 @@ test('pipeline reuses cached audio without calling TTS', async () => {
     assert.ok(post._hexoReader && post._hexoReader.ready, 'pipeline should mark ready');
     assert.ok(post.content.includes('class="hexo-reader"'), 'player should be injected');
     assert.ok(post.content.includes(`/audio/${key}.mp3`), 'audio URL should include key');
-    assert.ok(post.content.includes('data-hexo-reader-assets'));
+    assert.ok(!post.content.includes('reader.js'), 'assets should not be inlined in post content');
 
     registerGenerator(ctx, pipeline);
     const outputs = ctx._generators['hexo-reader']({});
@@ -122,6 +138,26 @@ test('pipeline skips when reader=false', async () => {
     await pipeline.processPost(post);
     assert.equal(post._hexoReader, undefined);
     assert.equal(post.content, '<p>hi</p>');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('registerSiteAssets injects PJAX-safe global assets', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hexo-reader-int-'));
+  try {
+    const config = resolveConfig({});
+    const ctx = makeFakeHexo(dir);
+    registerSiteAssets(ctx, config);
+
+    const head = ctx.extend.injector.getText('head_end', 'default');
+    const body = ctx.extend.injector.getText('body_end', 'default');
+    assert.ok(head.includes('data-hexo-reader-css'));
+    assert.ok(head.includes(READER_CSS_ROUTE));
+    assert.ok(body.includes('data-pjax'));
+    assert.ok(body.includes('data-hexo-reader-js'));
+    assert.ok(body.includes(READER_JS_ROUTE));
+    assert.ok(body.includes('hexoReaderBoot'));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

@@ -270,6 +270,12 @@ flowchart LR
 插件在标签存在时已会抑制自动注入——请确保标签已渲染（未被注释），且主题模板
 未额外添加副本。
 
+**播放器样式错乱（播放/暂停图标重叠）或 PJAX 主题下无法播放。**
+AnZhiYu、Butterfly 等开启 PJAX 的主题，从首页点进文章时不会执行正文里的
+`<script defer>` / `<link>`。自 **0.1.3** 起，插件通过 Hexo injector 将
+`reader.css` / `reader.js` 注入全站 `head` / `body`，并在 `pjax:complete` 时
+调用 `hexoReaderBoot()`。请升级到最新版后 `hexo clean && hexo generate`。
+
 **音频无法播放 / 404。**
 确保部署包含 `audio/` 与 `assets/hexo-reader/` 目录。若使用非默认 `audioDir`，
 请确认 CDN 规则未拦截。

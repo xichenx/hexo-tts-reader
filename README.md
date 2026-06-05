@@ -281,6 +281,13 @@ The plugin already suppresses auto-injection when the tag is present — make
 sure the tag is rendered (not commented out) and that no theme template adds
 its own copy.
 
+**Player UI looks broken (overlapping play/pause icons) or won't play under PJAX themes.**
+Themes such as AnZhiYu and Butterfly swap `#body-wrap` on in-site navigation and
+ignore `<script defer>` / `<link>` tags embedded in post content. Since **0.1.3**,
+this plugin injects `reader.css` / `reader.js` site-wide via Hexo injector and
+re-initializes on `pjax:complete` through `hexoReaderBoot()`. Upgrade and run
+`hexo clean && hexo generate`.
+
 **Audio doesn't play / 404.**
 Make sure your deployment includes the `audio/` and `assets/hexo-reader/`
 directories. If you set a non-default `audioDir`, ensure it's not blocked by

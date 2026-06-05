@@ -2,6 +2,7 @@
 
 const { resolveConfig } = require('./lib/config');
 const { ReaderPipeline } = require('./lib/injector');
+const { registerSiteAssets } = require('./lib/injectSiteAssets');
 const { registerTag } = require('./lib/tag');
 const { registerGenerator } = require('./lib/generator');
 
@@ -28,6 +29,10 @@ function setup(ctx) {
 
   registerTag(ctx, config);
   registerGenerator(ctx, pipeline);
+
+  ctx.extend.filter.register('after_generate', () => {
+    registerSiteAssets(ctx, config);
+  });
 
   ctx.extend.filter.register('after_post_render', async function afterPostRender(data) {
     try {
