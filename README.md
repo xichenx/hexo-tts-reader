@@ -8,8 +8,40 @@
 [![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
 [![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
 
+<!-- README-I18N:START -->
+
+**English** | [汉语](./README.zh.md) | [Español](./README.es.md) | [Français](./README.fr.md) | [Deutsch](./README.de.md) | [日本語](./README.ja.md) | [한국어](./README.ko.md) | [Português](./README.pt.md)
+
+<!-- README-I18N:END -->
+
 The browser only ever loads a static `<audio>` file — no runtime TTS server,
-no API key, no client-side JavaScript synthesis.
+no API key, no client-side JavaScript synthesis. Ideal for blogs that want
+read-aloud without operating a backend or paying for a speech API at runtime.
+
+## Table of contents
+
+- [Preview](#preview)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Install](#install)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [How it works](#how-it-works)
+- [Voices](#voices)
+- [Cache](#cache)
+- [Theming](#theming)
+- [Troubleshooting](#troubleshooting)
+- [Notes & limitations](#notes--limitations)
+- [Development](#development)
+- [Related links](#related-links)
+- [License](#license)
+
+---
+
+## Preview
+
+Open [`preview.html`](./preview.html) in your browser to try the floating player
+UI in light and dark mode — no Hexo site or TTS network call required.
 
 ---
 
@@ -60,7 +92,8 @@ pnpm add hexo-tts-reader
    ```
 
 3. Run `hexo clean && hexo generate` (or `hexo server`). Each post page will
-   gain a floating "朗读本文" button in the bottom-right corner.
+   gain a floating player button (default label: `朗读本文`) in the bottom-right
+   corner. Change `buttonLabel` in config for your locale.
 
 That's it. On subsequent builds, the content-hash cache means only changed
 posts hit the TTS service.
@@ -149,6 +182,16 @@ Any post whose `source` contains one of the substrings above is skipped.
 ---
 
 ## How it works
+
+```mermaid
+flowchart LR
+  A[Hexo renders post] --> B[Extract plain text]
+  B --> C{Cache hit?}
+  C -->|yes| E[Copy MP3 to public dir]
+  C -->|no| D[Edge TTS via WebSocket]
+  D --> E
+  E --> F[Inject player markup]
+```
 
 1. After Hexo renders a post (`after_post_render` filter), the plugin extracts
    a TTS-friendly plain-text representation from the HTML. Code blocks,
@@ -273,6 +316,15 @@ npm test
 ```
 
 Tests use the built-in Node test runner (`node --test`).
+
+---
+
+## Related links
+
+- [npm package](https://www.npmjs.com/package/hexo-tts-reader)
+- [GitHub repository](https://github.com/xichenx/hexo-tts-reader)
+- [Report an issue](https://github.com/xichenx/hexo-tts-reader/issues)
+- [msedge-tts](https://www.npmjs.com/package/msedge-tts) — underlying TTS client
 
 ---
 
