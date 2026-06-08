@@ -32,6 +32,13 @@ function setup(ctx) {
 
   ctx.extend.filter.register('after_generate', () => {
     registerSiteAssets(ctx, config);
+    if (config.pruneCache) {
+      try {
+        pipeline.pruneCache();
+      } catch (err) {
+        ctx.log.warn(`hexo-reader: cache prune failed: ${err.message}`);
+      }
+    }
   });
 
   ctx.extend.filter.register('after_post_render', async function afterPostRender(data) {
