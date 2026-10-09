@@ -109,8 +109,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -130,8 +131,9 @@ reader:
 | `enable` | boolean | `true` | Interrupteur principal. |
 | `autoInject` | boolean | `true` | Ajoute le lecteur à chaque article automatiquement. Désactivez si vous souhaitez uniquement utiliser `{% reader %}`. |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | Tout identifiant de voix Microsoft Edge TTS en ligne. |
-| `rate` | number | `0` | Vitesse de parole relative, `-100..100`. Les valeurs hors plage sont limitées. |
-| `pitch` | number | `0` | Hauteur relative, `-100..100`. Les valeurs hors plage sont limitées. |
+| `autoVoice` | `article` / boolean | `article` | Une voix par article ; `true` change de voix dans le texte, `false` fixe `voice`. Une valeur explicite de `voice` reste fixe sauf si `autoVoice` est aussi défini. |
+| `rate` | number | `-8` | Vitesse de parole relative, `-100..100`. Les valeurs hors plage sont limitées. |
+| `pitch` | number | `-2` | Hauteur relative, `-100..100`. Les valeurs hors plage sont limitées. |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | Tout format pris en charge par `msedge-tts`. |
 | `audioDir` | string | `audio` | Chemin public sous la racine du site où les MP3 sont émis. Le path traversal est rejeté. |
 | `cacheDir` | string | `.hexo-reader-cache` | Répertoire de cache local (résolu depuis le répertoire de base du site). Persiste entre les compilations. |
@@ -251,11 +253,10 @@ Le lecteur injecté utilise des classes CSS préfixées par `hexo-reader__`. Pou
 couleurs, remplacez-les dans la feuille de style de votre thème, par exemple :
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```

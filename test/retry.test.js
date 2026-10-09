@@ -3,7 +3,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { withRetry } = require('../lib/tts');
+const { Readable } = require('node:stream');
+const { withRetry, formatProsodyValue, prepareSpeechText, escapeXml, synthesizeChunk } = require('../lib/tts');
 const { resolveConfig } = require('../lib/config');
 
 test('withRetry returns immediately on first success', async () => {
@@ -86,4 +87,36 @@ test('resolveConfig exposes retry defaults and clamps overrides', () => {
 
   const floored = resolveConfig({ retries: 3.9 });
   assert.equal(floored.retries, 3);
+});
+
+test('formatProsodyValue converts numeric config to SSML values', () => {
+  assert.equal(formatProsodyValue(0, '%'), '0%');
+  assert.equal(formatProsodyValue(-8, '%'), '-8%');
+  assert.equal(formatProsodyValue(12, '%'), '+12%');
+  assert.equal(formatProsodyValue('invalid', 'Hz'), '0Hz');
+});
+
+test('speech preparation adds pauses only where block text has no sentence ending', () => {
+  assert.equal(prepareSpeechText('第一段\n第二段。\nHello world\nNext!'),
+    '第一段。 第二段。 Hello world. Next!');
+  assert.equal(escapeXml('Tom & Jerry <test> "ok"'),
+    'Tom &amp; Jerry &lt;test&gt; &quot;ok&quot;');
+});
+
+test('synthesizeChunk forwards prosody and escapes SSML-sensitive text', async () => {
+  let received;
+  const tts = {
+    toStream(text, options) {
+      received = { text, options };
+      return { audioStream: Readable.from([Buffer.from('audio')]) };
+    }
+  };
+  const result = await synthesizeChunk(tts, 'A & B', 1000, { rate: '-8%', pitch: '-2%' });
+  assert.deepEqual(received, { text: 'A &amp; B', options: { rate: '-8%', pitch: '-2%' } });
+  assert.equal(result.toString(), 'audio');
+});
+
+test('synthesizeChunk rejects empty output so a partial article is not cached', async () => {
+  const tts = { toStream() { return { audioStream: Readable.from([]) }; } };
+  await assert.rejects(() => synthesizeChunk(tts, 'hello', 1000, {}), /empty audio chunk/);
 });

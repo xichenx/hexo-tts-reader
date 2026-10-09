@@ -84,7 +84,7 @@ test('tag sets _hexoReaderTagged and emits placeholder', () => {
 test('pipeline reuses cached audio without calling TTS', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hexo-reader-int-'));
   try {
-    const config = resolveConfig({ cacheDir: 'cache', audioDir: 'audio' });
+    const config = resolveConfig({ cacheDir: 'cache', audioDir: 'audio', autoVoice: false });
     const ctx = makeFakeHexo(dir);
     const pipeline = new ReaderPipeline(ctx, config, ctx.log);
 
@@ -166,7 +166,7 @@ test('registerSiteAssets injects PJAX-safe global assets', () => {
 test('placeholder from tag is replaced by player when ready', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hexo-reader-int-'));
   try {
-    const config = resolveConfig({});
+    const config = resolveConfig({ autoVoice: false });
     const ctx = makeFakeHexo(dir);
     const pipeline = new ReaderPipeline(ctx, config, ctx.log);
 

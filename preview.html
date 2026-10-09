@@ -95,26 +95,31 @@
       <p class="hint" style="margin-top:14px;margin-bottom:0;">
         切换深色模式请使用系统外观设置（页面与播放器都会跟随
         <code>prefers-color-scheme</code>）。
+        预览页使用公开测试音频；实际博客会在构建时生成文章朗读。
       </p>
     </div>
 
     <article>
       <p>这是一段示例正文，用来演示 hexo-tts-reader 在文章页中的真实呈现效果。播放器常驻在页面角落，无需点击展开，直接点播放即可朗读本文。</p>
-      <p>新版面板采用毛玻璃背景与圆角卡片，顶部显示文章标题，进度条会随播放实时填充，速度切换改为分段胶囊按钮，整体观感更现代。</p>
+      <p>播放器展开后可查看文章标题、朗读状态、进度和倍速。触屏可点右上角收起，键盘聚焦播放按钮也会展开控制区。</p>
       <p>播放器的所有交互——播放/暂停、拖动进度、调整倍速、展开/收起——都可以在本预览页直接体验。下方音频为公开测试样例，便于验证真实播放与进度。</p>
       <p>滚动页面、缩放窗口或在移动端查看，可以观察播放器的固定定位与响应式表现。</p>
     </article>
 
     <!-- 播放器：与 lib/injector.js buildPlayerMarkup 输出保持一致 -->
-    <div class="hexo-reader" data-position="bottom-right" data-audio="https://www.w3schools.com/html/horse.mp3" data-title="hexo-tts-reader 新版 UI 预览">
-      <div class="hexo-reader__panel" role="group" aria-label="文章朗读">
-        <button type="button" class="hexo-reader__play" aria-label="播放">
+    <div class="hexo-reader" data-position="bottom-right" data-audio="https://www.w3schools.com/html/horse.mp3" data-title="hexo-tts-reader 新版 UI 预览" data-label-play="朗读本文" data-label-pause="朗读本文（暂停）">
+      <div class="hexo-reader__panel" role="group" aria-label="朗读本文">
+        <button type="button" class="hexo-reader__play" aria-label="朗读本文">
           <svg class="hexo-reader__icon-play" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
           <svg class="hexo-reader__icon-pause" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
         </button>
         <div class="hexo-reader__body">
           <div class="hexo-reader__header">
-            <span class="hexo-reader__title" title="hexo-tts-reader 新版 UI 预览">hexo-tts-reader 新版 UI 预览</span>
+            <span class="hexo-reader__heading">
+              <span class="hexo-reader__title" title="hexo-tts-reader 新版 UI 预览">hexo-tts-reader 新版 UI 预览</span>
+              <span class="hexo-reader__status" aria-live="polite">准备播放</span>
+            </span>
+            <button type="button" class="hexo-reader__collapse" aria-label="收起播放器" title="收起播放器">×</button>
           </div>
           <div class="hexo-reader__progress">
             <input type="range" class="hexo-reader__seek" min="0" max="1000" value="0" step="1" aria-label="进度" />
@@ -131,7 +136,7 @@
             </div>
           </div>
         </div>
-        <audio class="hexo-reader__audio" preload="none" src="https://www.w3schools.com/html/horse.mp3"></audio>
+        <audio class="hexo-reader__audio" preload="metadata" src="https://www.w3schools.com/html/horse.mp3"></audio>
       </div>
     </div>
   </div>

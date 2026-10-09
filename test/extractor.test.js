@@ -74,6 +74,8 @@ test('resolveConfig applies defaults', () => {
   const cfg = resolveConfig({});
   assert.equal(cfg.enable, true);
   assert.equal(cfg.voice, 'zh-CN-XiaoxiaoNeural');
+  assert.equal(cfg.rate, -8);
+  assert.equal(cfg.pitch, -2);
   assert.equal(cfg.position, 'bottom-right');
   assert.equal(cfg.audioDir, 'audio');
 });
@@ -121,6 +123,22 @@ test('buildPlayerMarkup escapes attributes', () => {
   assert.ok(html.includes('&quot;b.mp3'));
   assert.ok(html.includes('&lt;t&gt;&quot;q&quot;'));
   assert.ok(html.includes('data-position="bottom-right"'));
+  assert.ok(html.includes('data-label-play="&lt;x&gt;"'));
+  assert.ok(html.includes('aria-label="&lt;x&gt;"'));
+});
+
+test('buildPlayerMarkup uses the configured label for accessible play state', () => {
+  const html = buildPlayerMarkup({
+    audioUrl: '/a.mp3',
+    position: 'bottom-right',
+    buttonLabel: 'Listen now',
+    postTitle: 'Article'
+  });
+  assert.ok(html.includes('aria-label="Listen now"'));
+  assert.ok(html.includes('data-label-pause="Listen now（暂停）"'));
+  assert.ok(html.includes('preload="metadata"'));
+  assert.ok(html.includes('class="hexo-reader__collapse"'));
+  assert.ok(html.includes('class="hexo-reader__status"'));
 });
 
 test('buildPlayerMarkup falls back to escaped label when no title', () => {

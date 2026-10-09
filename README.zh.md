@@ -107,8 +107,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -127,9 +128,11 @@ reader:
 | --- | --- | --- | --- |
 | `enable` | boolean | `true` | 总开关。 |
 | `autoInject` | boolean | `true` | 自动在每篇文章末尾追加播放器。若仅使用 `{% reader %}`，请关闭此项。 |
-| `voice` | string | `zh-CN-XiaoxiaoNeural` | 任意 Microsoft Edge 在线 TTS 语音 ID。 |
-| `rate` | number | `0` | 相对语速，`-100..100`。超出范围的值会被截断。 |
-| `pitch` | number | `0` | 相对音调，`-100..100`。超出范围的值会被截断。 |
+| `voice` | string | `zh-CN-XiaoxiaoNeural` | 兜底音色；显式设置且未配置 `autoVoice` 时，全站使用该音色。 |
+| `autoVoice` | `article` / boolean | `article` | 默认按文章语言选一个音色；`true` 按文字片段切换；`false` 固定使用 `voice`。 |
+| `voices` | object | 内置映射 | 开启语言路由时，`zh`、`en`、`ja`、`ko`、`ru` 对应的音色 ID。 |
+| `rate` | number | `-8` | 相对语速，`-100..100`。超出范围的值会被截断。 |
+| `pitch` | number | `-2` | 相对音调，`-100..100`。超出范围的值会被截断。 |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | `msedge-tts` 支持的任意格式。 |
 | `audioDir` | string | `audio` | 站点根目录下的公开 MP3 输出路径。拒绝路径穿越。 |
 | `cacheDir` | string | `.hexo-reader-cache` | 本地缓存目录（从站点 base 目录解析）。跨构建持久保存。 |
@@ -192,7 +195,7 @@ flowchart LR
 
 1. Hexo 渲染文章后（`after_post_render` 过滤器），插件从 HTML 中提取适合 TTS
    的纯文本。代码块、脚本、样式和嵌入式媒体会被移除。
-2. 对 `{ text, voice, rate, pitch, format }` 计算 SHA-1 作为缓存键。
+2. 对没有句末标点的段落补停顿，再根据文本、音色设置与合成版本计算 SHA-1 缓存键。
 3. 若 `<cacheDir>/<key>.mp3` 已存在则复用；否则插件通过 [`msedge-tts`][msedge]
    连接 Microsoft Edge TTS WebSocket，并以原子方式写入结果（`*.tmp` → rename）。
 4. 长文本在句子边界（中英文标点）分块，逐块合成，并作为原始 MP3 帧拼接——
@@ -221,6 +224,20 @@ flowchart LR
 
 完整列表请参阅上游语音目录，或通过 `msedge-tts` 运行 `voices` 查询。
 
+如果想比较更柔和的中文朗读，可在站点 `_config.yml` 里试试女声
+`zh-CN-XiaoyiNeural` 或男声 `zh-CN-YunxiNeural`：
+
+```yaml
+reader:
+  voice: zh-CN-XiaoyiNeural
+  rate: -8
+  pitch: -2
+```
+
+显式设置 `voice` 后，默认全站固定这个音色。多语言博客可以不设置 `voice`，
+默认 `autoVoice: article` 会为每篇文章选一个音色，避免遇到英文技术词时频繁换声。
+需要逐段切换时可设置 `autoVoice: true`。音色好听与否比较主观，建议用自己的文章试听。
+
 ---
 
 ## 缓存
@@ -242,11 +259,10 @@ flowchart LR
 可在主题样式表中覆盖，例如：
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```

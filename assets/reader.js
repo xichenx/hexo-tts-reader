@@ -21,9 +21,13 @@
     var panel = root.querySelector('.hexo-reader__panel');
     var playBtn = root.querySelector('.hexo-reader__play');
     var header = root.querySelector('.hexo-reader__header');
+    var collapseBtn = root.querySelector('.hexo-reader__collapse');
+    var statusLabel = root.querySelector('.hexo-reader__status');
     var timeLabel = root.querySelector('.hexo-reader__time');
     var seek = root.querySelector('.hexo-reader__seek');
     var rateBtns = root.querySelectorAll('.hexo-reader__rate');
+    var playLabel = root.getAttribute('data-label-play') || '播放';
+    var pauseLabel = root.getAttribute('data-label-pause') || '暂停';
 
     if (!audio || !panel || !playBtn) {
       return;
@@ -35,7 +39,30 @@
 
     function setPlayingIcon(playing) {
       playBtn.classList.toggle('is-playing', !!playing);
-      playBtn.setAttribute('aria-label', playing ? '暂停' : '播放');
+      playBtn.setAttribute('aria-label', playing ? pauseLabel : playLabel);
+      if (statusLabel && !root.classList.contains('is-error')) {
+        statusLabel.textContent = playing ? '正在朗读' : '已暂停';
+      }
+    }
+
+    playBtn.addEventListener('focus', function () {
+      if (!root.__hexoReaderClosing) {
+        setExpanded(true);
+      }
+    });
+    root.addEventListener('focusout', function (e) {
+      if (!e.relatedTarget || !root.contains(e.relatedTarget)) {
+        setExpanded(false);
+      }
+    });
+    if (collapseBtn) {
+      collapseBtn.addEventListener('click', function () {
+        setExpanded(false);
+        root.classList.add('is-hover-suppressed');
+        root.__hexoReaderClosing = true;
+        playBtn.focus({ preventScroll: true });
+        root.__hexoReaderClosing = false;
+      });
     }
 
     function updateSeekFill() {
@@ -54,14 +81,22 @@
         return;
       }
       if (audio.paused) {
-        audio.play().catch(function () {});
+        audio.play().catch(function () {
+          root.classList.add('is-error');
+          if (statusLabel) { statusLabel.textContent = '播放失败'; }
+        });
       } else {
         audio.pause();
       }
     });
 
     audio.addEventListener('play', function () {
+      root.classList.remove('is-error');
       setPlayingIcon(true);
+      var others = document.querySelectorAll('.hexo-reader__audio');
+      for (var i = 0; i < others.length; i++) {
+        if (others[i] !== audio && !others[i].paused) { others[i].pause(); }
+      }
       // Pointer (mouse/pen) devices rely purely on hover to expand/collapse, so
       // playback must not pin the panel open. Touch has no hover, so a tap-play
       // expands the controls there.
@@ -70,7 +105,10 @@
       }
     });
     audio.addEventListener('pause', function () { setPlayingIcon(false); });
-    audio.addEventListener('ended', function () { setPlayingIcon(false); });
+    audio.addEventListener('ended', function () {
+      setPlayingIcon(false);
+      if (statusLabel) { statusLabel.textContent = '播放完成'; }
+    });
 
     audio.addEventListener('timeupdate', function () {
       if (timeLabel) {
@@ -92,6 +130,9 @@
     });
 
     audio.addEventListener('error', function () {
+      root.classList.add('is-error');
+      setPlayingIcon(false);
+      if (statusLabel) { statusLabel.textContent = '音频加载失败'; }
       if (timeLabel) {
         timeLabel.textContent = '加载失败';
       }
@@ -118,10 +159,12 @@
     }
 
     if (rateBtns && rateBtns.length) {
+      var rateKey = 'hexo-reader-rate';
       var setRate = function (btn) {
         var v = parseFloat(btn.getAttribute('data-rate'));
         if (isFinite(v) && v > 0) {
           audio.playbackRate = v;
+          try { window.localStorage.setItem(rateKey, String(v)); } catch (e) {}
         }
         for (var j = 0; j < rateBtns.length; j++) {
           rateBtns[j].setAttribute('aria-pressed', rateBtns[j] === btn ? 'true' : 'false');
@@ -132,6 +175,15 @@
           btn.addEventListener('click', function () { setRate(btn); });
         })(rateBtns[k]);
       }
+      try {
+        var storedRate = window.localStorage.getItem(rateKey);
+        for (var n = 0; n < rateBtns.length; n++) {
+          if (rateBtns[n].getAttribute('data-rate') === storedRate) {
+            setRate(rateBtns[n]);
+            break;
+          }
+        }
+      } catch (e) {}
     }
 
     setupDrag(root, playBtn, header);
@@ -270,6 +322,9 @@
       }
       handle.style.touchAction = 'none';
       handle.addEventListener('pointerdown', function (e) {
+        if (e.target.closest && e.target.closest('.hexo-reader__collapse')) {
+          return;
+        }
         root.__hexoReaderPointerType = e.pointerType;
         if (e.button != null && e.button !== 0) {
           return;

@@ -109,8 +109,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -129,9 +130,11 @@ reader:
 | --- | --- | --- | --- |
 | `enable` | boolean | `true` | Master switch. |
 | `autoInject` | boolean | `true` | Append the player to every post automatically. Disable if you only want to use `{% reader %}`. |
-| `voice` | string | `zh-CN-XiaoxiaoNeural` | Any Microsoft Edge online TTS voice id. |
-| `rate` | number | `0` | Relative speech rate, `-100..100`. Out-of-range values are clamped. |
-| `pitch` | number | `0` | Relative pitch, `-100..100`. Out-of-range values are clamped. |
+| `voice` | string | `zh-CN-XiaoxiaoNeural` | Fallback voice. Setting a custom `voice` without `autoVoice` uses that voice for every post. |
+| `autoVoice` | `article` / boolean | `article` | Choose one voice for the detected article language; `true` switches by script within a post; `false` keeps `voice` fixed. |
+| `voices` | object | built-in map | Voice ids for `zh`, `en`, `ja`, `ko`, and `ru` when language routing is enabled. |
+| `rate` | number | `-8` | Relative speech rate, `-100..100`; a small negative value is more comfortable for long-form narration. Out-of-range values are clamped. |
+| `pitch` | number | `-2` | Relative pitch, `-100..100`; forwarded to Edge TTS. Out-of-range values are clamped. |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | Any format supported by `msedge-tts`. |
 | `audioDir` | string | `audio` | Public path under the site root where MP3s are emitted. Path traversal is rejected. |
 | `cacheDir` | string | `.hexo-reader-cache` | Local cache dir (resolved from your site's base dir). Survives across builds. |
@@ -196,7 +199,7 @@ flowchart LR
 1. After Hexo renders a post (`after_post_render` filter), the plugin extracts
    a TTS-friendly plain-text representation from the HTML. Code blocks,
    scripts, styles, and embedded media are removed.
-2. A SHA-1 of `{ text, voice, rate, pitch, format }` becomes the cache key.
+2. Paragraph boundaries without punctuation receive a sentence pause. A SHA-1 of the text and voice settings (including the synthesis revision) becomes the cache key.
 3. If `<cacheDir>/<key>.mp3` already exists, it is reused. Otherwise the
    plugin opens a WebSocket to Microsoft Edge TTS (via [`msedge-tts`][msedge])
    and writes the result atomically (`*.tmp` → rename).
@@ -229,6 +232,23 @@ Any voice supported by Microsoft Edge online TTS works. A few examples:
 For a full list, see the upstream voice catalogue or run a `voices` query via
 `msedge-tts`.
 
+For a calmer Chinese reading voice, try `zh-CN-XiaoyiNeural` (female) or
+`zh-CN-YunxiNeural` (male) in your site's `_config.yml`:
+
+```yaml
+reader:
+  voice: zh-CN-XiaoyiNeural
+  rate: -8
+  pitch: -2
+```
+
+An explicit `voice` uses one narrator for every post unless `autoVoice` is also
+set. For a multilingual blog, leave `voice` unset: the default `article` mode
+chooses a single narrator per article and avoids switching on each English
+technical term. Set `autoVoice: true` only if you prefer within-article voice
+switching. Listening preference is subjective; these are options to compare,
+not a guarantee that one voice sounds better on every text.
+
 ---
 
 ## Cache
@@ -251,11 +271,10 @@ The injected player uses CSS classes prefixed with `hexo-reader__`. To
 customize colors, override them in your theme's stylesheet, for example:
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```

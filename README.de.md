@@ -109,8 +109,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -130,8 +131,9 @@ reader:
 | `enable` | boolean | `true` | Hauptschalter. |
 | `autoInject` | boolean | `true` | Fügt den Player automatisch jedem Beitrag hinzu. Deaktivieren, wenn Sie nur `{% reader %}` verwenden möchten. |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | Beliebige Microsoft Edge Online-TTS-Stimmen-ID. |
-| `rate` | number | `0` | Relative Sprechgeschwindigkeit, `-100..100`. Werte außerhalb des Bereichs werden begrenzt. |
-| `pitch` | number | `0` | Relative Tonhöhe, `-100..100`. Werte außerhalb des Bereichs werden begrenzt. |
+| `autoVoice` | `article` / boolean | `article` | Eine Stimme pro Artikel; `true` wechselt innerhalb des Textes, `false` verwendet `voice`. Eine explizit gesetzte `voice` deaktiviert die automatische Wahl, sofern `autoVoice` nicht gesetzt ist. |
+| `rate` | number | `-8` | Relative Sprechgeschwindigkeit, `-100..100`. Werte außerhalb des Bereichs werden begrenzt. |
+| `pitch` | number | `-2` | Relative Tonhöhe, `-100..100`. Werte außerhalb des Bereichs werden begrenzt. |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | Jedes von `msedge-tts` unterstützte Format. |
 | `audioDir` | string | `audio` | Öffentlicher Pfad unter dem Site-Root, in dem MP3s ausgegeben werden. Path Traversal wird abgelehnt. |
 | `cacheDir` | string | `.hexo-reader-cache` | Lokales Cache-Verzeichnis (aufgelöst vom Basisverzeichnis der Site). Überlebt Builds hinweg. |
@@ -250,11 +252,10 @@ Der eingefügte Player verwendet CSS-Klassen mit dem Präfix `hexo-reader__`. Um
 anzupassen, überschreiben Sie sie im Stylesheet Ihres Themes, zum Beispiel:
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```

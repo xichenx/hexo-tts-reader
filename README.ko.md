@@ -110,8 +110,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -131,8 +132,9 @@ reader:
 | `enable` | boolean | `true` | 마스터 스위치. |
 | `autoInject` | boolean | `true` | 모든 게시글에 플레이어를 자동으로 추가. `{% reader %}`만 사용할 경우 비활성화. |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | Microsoft Edge 온라인 TTS의 임의 음성 ID. |
-| `rate` | number | `0` | 상대적 말하기 속도, `-100..100`. 범위를 벗어난 값은 클램핑됨. |
-| `pitch` | number | `0` | 상대적 피치, `-100..100`. 범위를 벗어난 값은 클램핑됨. |
+| `autoVoice` | `article` / boolean | `article` | 글마다 하나의 음성을 선택합니다. `true`는 글 안에서 전환하고 `false`는 `voice`를 고정합니다. `voice`를 직접 지정하면 `autoVoice`도 설정하지 않는 한 고정됩니다. |
+| `rate` | number | `-8` | 상대적 말하기 속도, `-100..100`. 범위를 벗어난 값은 클램핑됨. |
+| `pitch` | number | `-2` | 상대적 피치, `-100..100`. 범위를 벗어난 값은 클램핑됨. |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | `msedge-tts`가 지원하는 임의 형식. |
 | `audioDir` | string | `audio` | 사이트 루트 아래 MP3 공개 출력 경로. 경로 탐색은 거부됨. |
 | `cacheDir` | string | `.hexo-reader-cache` | 로컬 캐시 디렉터리(사이트 base 디렉터리 기준). 빌드 간 유지. |
@@ -250,11 +252,10 @@ Microsoft Edge 온라인 TTS가 지원하는 모든 음성을 사용할 수 있�
 색상을 사용자 지정하려면 테마 스타일시트에서 덮어쓰세요. 예:
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```

@@ -110,8 +110,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -131,8 +132,9 @@ reader:
 | `enable` | boolean | `true` | マスタースイッチ。 |
 | `autoInject` | boolean | `true` | すべての投稿にプレーヤーを自動追加。`{% reader %}` のみ使う場合は無効化。 |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | 任意の Microsoft Edge オンライン TTS 音声 ID。 |
-| `rate` | number | `0` | 相対的な話速、`-100..100`。範囲外の値はクランプされます。 |
-| `pitch` | number | `0` | 相対的なピッチ、`-100..100`。範囲外の値はクランプされます。 |
+| `autoVoice` | `article` / boolean | `article` | 記事ごとに一つの音声を選択。`true` は文中で切り替え、`false` は `voice` に固定。`voice` を明示すると、`autoVoice` も指定しない限り固定されます。 |
+| `rate` | number | `-8` | 相対的な話速、`-100..100`。範囲外の値はクランプされます。 |
+| `pitch` | number | `-2` | 相対的なピッチ、`-100..100`。範囲外の値はクランプされます。 |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | `msedge-tts` がサポートする任意の形式。 |
 | `audioDir` | string | `audio` | サイトルート配下の MP3 公開出力パス。パストラバーサルは拒否されます。 |
 | `cacheDir` | string | `.hexo-reader-cache` | ローカルキャッシュディレクトリ（サイトの base ディレクトリから解決）。ビルド間で保持。 |
@@ -250,11 +252,10 @@ Microsoft Edge オンライン TTS がサポートする任意の音声が使用
 色をカスタマイズするには、テーマのスタイルシートで上書きしてください。例：
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```

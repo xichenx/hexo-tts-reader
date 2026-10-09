@@ -35,6 +35,8 @@ test('detectLanguage picks dominant language and prefers Japanese on kana', () =
   assert.equal(detectLanguage('これは日本語です'), 'ja');
   // Han + kana mixed must resolve to Japanese, not Chinese.
   assert.equal(detectLanguage('日本語のテキスト'), 'ja');
+  assert.equal(detectLanguage('An English article with one Japanese example: あ'), 'en');
+  assert.equal(detectLanguage('这是一篇很长的中文文章，介绍技术方案。示例字符是あ，其他内容仍然是中文。'), 'zh');
   assert.equal(detectLanguage('안녕하세요'), 'ko');
   assert.equal(detectLanguage('12345 ...'), null);
   assert.equal(detectLanguage(''), null);
@@ -96,6 +98,17 @@ test('planJobs splits by voice when autoVoice is on', () => {
   assert.deepEqual(jobs.map((j) => j.voice), [VOICES.zh, VOICES.en, VOICES.zh]);
 });
 
+test('planJobs chooses one voice for an entire article by default', () => {
+  const jobs = planJobs('This is an English article with 中文 examples.', {
+    voice: VOICES.zh,
+    autoVoice: 'article',
+    voices: VOICES,
+    chunkSize: 4000
+  });
+  assert.equal(jobs.length, 1);
+  assert.equal(jobs[0].voice, VOICES.en);
+});
+
 test('resolveConfig exposes autoVoice and a merged voices map', () => {
   const cfg = resolveConfig({ autoVoice: true, voices: { en: 'en-GB-LibbyNeural' } });
   assert.equal(cfg.autoVoice, true);
@@ -104,7 +117,10 @@ test('resolveConfig exposes autoVoice and a merged voices map', () => {
   assert.equal(cfg.voices.zh, 'zh-CN-XiaoxiaoNeural');
 });
 
-test('resolveConfig defaults autoVoice to false', () => {
+test('resolveConfig defaults to article routing but respects an explicit voice', () => {
   const cfg = resolveConfig({});
-  assert.equal(cfg.autoVoice, false);
+  assert.equal(cfg.autoVoice, 'article');
+  assert.equal(resolveConfig({ voice: VOICES.en }).autoVoice, false);
+  assert.equal(resolveConfig({ voice: VOICES.en, autoVoice: 'article' }).autoVoice, 'article');
+  assert.equal(resolveConfig({ autoVoice: false }).autoVoice, false);
 });

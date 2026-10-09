@@ -110,8 +110,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -131,8 +132,9 @@ reader:
 | `enable` | boolean | `true` | Interruptor principal. |
 | `autoInject` | boolean | `true` | Anexa o player a cada post automaticamente. Desative se quiser usar apenas `{% reader %}`. |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | Qualquer ID de voz do TTS online do Microsoft Edge. |
-| `rate` | number | `0` | Taxa de fala relativa, `-100..100`. Valores fora do intervalo são limitados. |
-| `pitch` | number | `0` | Tom relativo, `-100..100`. Valores fora do intervalo são limitados. |
+| `autoVoice` | `article` / boolean | `article` | Uma voz por artigo; `true` alterna dentro do texto e `false` fixa `voice`. Uma `voice` definida explicitamente fica fixa, a menos que `autoVoice` também seja definido. |
+| `rate` | number | `-8` | Taxa de fala relativa, `-100..100`. Valores fora do intervalo são limitados. |
+| `pitch` | number | `-2` | Tom relativo, `-100..100`. Valores fora do intervalo são limitados. |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | Qualquer formato suportado por `msedge-tts`. |
 | `audioDir` | string | `audio` | Caminho público sob a raiz do site onde os MP3s são emitidos. Path traversal é rejeitado. |
 | `cacheDir` | string | `.hexo-reader-cache` | Diretório de cache local (resolvido a partir do base dir do site). Persiste entre builds. |
@@ -252,11 +254,10 @@ O player injetado usa classes CSS prefixadas com `hexo-reader__`. Para
 personalizar cores, sobrescreva-as na folha de estilo do seu tema, por exemplo:
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```

@@ -109,8 +109,9 @@ reader:
   enable: true
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
-  rate: 0                                    # -100..100, relative percent
-  pitch: 0                                   # -100..100, relative percent
+  autoVoice: article                         # article | true | false
+  rate: -8                                   # -100..100, relative percent
+  pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
@@ -130,8 +131,9 @@ reader:
 | `enable` | boolean | `true` | Interruptor principal. |
 | `autoInject` | boolean | `true` | Añade el reproductor a cada entrada automáticamente. Desactívalo si solo quieres usar `{% reader %}`. |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | Cualquier id de voz de Microsoft Edge TTS en línea. |
-| `rate` | number | `0` | Velocidad de habla relativa, `-100..100`. Los valores fuera de rango se limitan. |
-| `pitch` | number | `0` | Tono relativo, `-100..100`. Los valores fuera de rango se limitan. |
+| `autoVoice` | `article` / boolean | `article` | Una voz por artículo; `true` cambia dentro del texto y `false` fija `voice`. Si se configura `voice`, se usa de forma fija salvo que también se indique `autoVoice`. |
+| `rate` | number | `-8` | Velocidad de habla relativa, `-100..100`. Los valores fuera de rango se limitan. |
+| `pitch` | number | `-2` | Tono relativo, `-100..100`. Los valores fuera de rango se limitan. |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | Cualquier formato compatible con `msedge-tts`. |
 | `audioDir` | string | `audio` | Ruta pública bajo la raíz del sitio donde se emiten los MP3. Se rechaza el path traversal. |
 | `cacheDir` | string | `.hexo-reader-cache` | Directorio de caché local (resuelto desde el directorio base del sitio). Persiste entre compilaciones. |
@@ -251,11 +253,10 @@ El reproductor inyectado usa clases CSS con el prefijo `hexo-reader__`. Para per
 colores, sobrescríbelos en la hoja de estilos de tu tema, por ejemplo:
 
 ```css
-.hexo-reader__toggle {
-  background: #1f6feb;
-  color: #fff;
+.hexo-reader {
+  --hexo-reader-accent: #1f6feb;
 }
-.hexo-reader__panel {
+.hexo-reader.is-expanded .hexo-reader__panel {
   border-radius: 12px;
 }
 ```
