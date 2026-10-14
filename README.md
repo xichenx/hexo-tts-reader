@@ -53,6 +53,7 @@ UI in light and dark mode — no Hexo site or TTS network call required.
 - **Floating player** with play / pause / seek / playback speed (0.75× – 2×)
 - **Light & dark themes**, keyboard accessible
 - **Smart text extraction** — skips code blocks, scripts, styles, and embedded media
+- **Author-controlled narration** — per-post voice, pace, script, and pronunciation rules
 - **Long-post safe** — chunks input on sentence boundaries and concatenates MP3 frames
 - **Per-post opt-out** via front-matter
 
@@ -110,11 +111,14 @@ reader:
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
   autoVoice: article                         # article | true | false
+  pronunciations:                            # exact text -> spoken form
+    Hexo: "Heck-so"
   rate: -8                                   # -100..100, relative percent
   pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
+  pruneCache: false                          # clean orphan audio after full renders
   position: bottom-right                     # bottom-right | bottom-left | top-right | top-left
   buttonLabel: 朗读本文
   chunkSize: 4000                            # split long posts into <= N chars per request
@@ -129,15 +133,17 @@ reader:
 | Option | Type | Default | Notes |
 | --- | --- | --- | --- |
 | `enable` | boolean | `true` | Master switch. |
-| `autoInject` | boolean | `true` | Append the player to every post automatically. Disable if you only want to use `{% reader %}`. |
+| `autoInject` | boolean | `true` | Append the player to every post automatically. When disabled, only posts with `{% reader %}` are synthesized. |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | Fallback voice. Setting a custom `voice` without `autoVoice` uses that voice for every post. |
 | `autoVoice` | `article` / boolean | `article` | Choose one voice for the detected article language; `true` switches by script within a post; `false` keeps `voice` fixed. |
 | `voices` | object | built-in map | Voice ids for `zh`, `en`, `ja`, `ko`, and `ru` when language routing is enabled. |
+| `pronunciations` | object | `{}` | Exact text-to-speech replacements; a post can override individual entries. |
 | `rate` | number | `-8` | Relative speech rate, `-100..100`; a small negative value is more comfortable for long-form narration. Out-of-range values are clamped. |
 | `pitch` | number | `-2` | Relative pitch, `-100..100`; forwarded to Edge TTS. Out-of-range values are clamped. |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | Any format supported by `msedge-tts`. |
 | `audioDir` | string | `audio` | Public path under the site root where MP3s are emitted. Path traversal is rejected. |
 | `cacheDir` | string | `.hexo-reader-cache` | Local cache dir (resolved from your site's base dir). Survives across builds. |
+| `pruneCache` | boolean | `false` | Remove orphaned audio from the local cache only when every current post was rendered in this build. Incremental builds keep existing audio. |
 | `position` | enum | `bottom-right` | One of `bottom-right`, `bottom-left`, `top-right`, `top-left`. |
 | `buttonLabel` | string | `朗读本文` | Aria-label / tooltip of the toggle button. |
 | `chunkSize` | number | `4000` | Max characters per TTS request, `200..8000`. |
@@ -171,6 +177,34 @@ Some intro text.
 The rest of the article.
 ```
 
+### Customize narration per post
+
+Set an optional `reader` object in front-matter. An explicit `voice` fixes the
+voice for this post unless `autoVoice` is also set. `text` replaces only the
+spoken script; the visible article remains unchanged.
+
+```yaml
+---
+title: A post about Hexo
+reader:
+  voice: zh-CN-YunxiNeural
+  rate: -12
+  pitch: 0
+  text: |
+    欢迎收听这篇文章。今天我们介绍 Hexo。
+  pronunciations:
+    Hexo: 黑克搜
+---
+```
+
+Supported post settings are `voice`, `autoVoice`, `rate`, `pitch`, `text`, and
+`pronunciations`. `reader: false` (or `reader: { enable: false }`) still skips
+the post. Pronunciation rules are case-sensitive, match exact substrings, and
+are applied to extracted text or the custom script. Longer matches win; rules
+are not recursively applied to their own replacements. A post's rule overrides
+the same site-wide rule. The final spoken text and voice settings determine the
+audio cache key.
+
 ### Skipping by path
 
 ```yaml
@@ -196,9 +230,9 @@ flowchart LR
   E --> F[Inject player markup]
 ```
 
-1. After Hexo renders a post (`after_post_render` filter), the plugin extracts
-   a TTS-friendly plain-text representation from the HTML. Code blocks,
-   scripts, styles, and embedded media are removed.
+1. After Hexo renders a post (`after_post_render` filter), the plugin uses the
+   authored speech script if provided; otherwise it extracts plain text from
+   the HTML. Code blocks, scripts, styles, and embedded media are removed.
 2. Paragraph boundaries without punctuation receive a sentence pause. A SHA-1 of the text and voice settings (including the synthesis revision) becomes the cache key.
 3. If `<cacheDir>/<key>.mp3` already exists, it is reused. Otherwise the
    plugin opens a WebSocket to Microsoft Edge TTS (via [`msedge-tts`][msedge])
@@ -208,8 +242,8 @@ flowchart LR
    frames — which is safe for playback.
 5. The generator emits the MP3 under `<audioDir>/<key>.mp3`, plus a shared
    `reader.js` / `reader.css` under `assets/hexo-reader/`.
-6. The player markup and a `<link>` / `<script>` snippet are appended to the
-   post's content so it ships with the static site.
+6. The player markup is appended to the post (or replaces `{% reader %}`), while
+   Hexo injects the shared CSS and JS site-wide.
 
 [msedge]: https://www.npmjs.com/package/msedge-tts
 
@@ -256,6 +290,11 @@ not a guarantee that one voice sounds better on every text.
 - The cache lives at `<site>/<cacheDir>` and survives across builds.
 - It is keyed on the **content**, not the file name, so renames don't trigger
   re-synthesis and minor edits regenerate only the affected posts.
+- Incremental builds emit cached MP3s for unchanged pages as well as newly
+  rendered posts. With `pruneCache: true`, cleanup runs only when Hexo has
+  rendered every current post; partial and no-op builds preserve the cache.
+- After changing site-wide narration settings or pronunciation rules, run
+  `hexo clean && hexo generate` so unchanged posts are rendered again.
 - To force a full re-synthesis, delete the cache directory.
 - Recommended `.gitignore` entry:
 

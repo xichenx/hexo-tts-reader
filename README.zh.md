@@ -52,6 +52,7 @@ UI——无需 Hexo 站点或 TTS 网络请求。
 - **悬浮播放器**，支持播放 / 暂停 / 跳转 / 播放速度（0.75× – 2×）
 - **浅色与深色主题**，支持键盘操作
 - **智能文本提取** — 跳过代码块、脚本、样式和嵌入式媒体
+- **可定制朗读** — 按文章指定音色、语速、朗读稿及术语发音
 - **长文安全** — 在句子边界分块输入并拼接 MP3 帧
 - **单篇禁用** — 通过 front-matter 按文章关闭
 
@@ -108,11 +109,14 @@ reader:
   autoInject: true
   voice: zh-CN-XiaoxiaoNeural
   autoVoice: article                         # article | true | false
+  pronunciations:                            # 原文 -> 朗读时的说法
+    Hexo: 黑克搜
   rate: -8                                   # -100..100, relative percent
   pitch: -2                                  # -100..100, relative percent
   outputFormat: audio-24khz-48kbitrate-mono-mp3
   audioDir: audio                            # public audio output dir
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
+  pruneCache: false                          # 全量渲染后清理无引用音频
   position: bottom-right                     # bottom-right | bottom-left | top-right | top-left
   buttonLabel: 朗读本文
   chunkSize: 4000                            # split long posts into <= N chars per request
@@ -127,15 +131,17 @@ reader:
 | 选项 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `enable` | boolean | `true` | 总开关。 |
-| `autoInject` | boolean | `true` | 自动在每篇文章末尾追加播放器。若仅使用 `{% reader %}`，请关闭此项。 |
+| `autoInject` | boolean | `true` | 自动在每篇文章末尾追加播放器。关闭后仅合成带有 `{% reader %}` 标签的文章。 |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | 兜底音色；显式设置且未配置 `autoVoice` 时，全站使用该音色。 |
 | `autoVoice` | `article` / boolean | `article` | 默认按文章语言选一个音色；`true` 按文字片段切换；`false` 固定使用 `voice`。 |
 | `voices` | object | 内置映射 | 开启语言路由时，`zh`、`en`、`ja`、`ko`、`ru` 对应的音色 ID。 |
+| `pronunciations` | object | `{}` | 精确匹配的术语发音替换；文章级规则可覆盖全站同名规则。 |
 | `rate` | number | `-8` | 相对语速，`-100..100`。超出范围的值会被截断。 |
 | `pitch` | number | `-2` | 相对音调，`-100..100`。超出范围的值会被截断。 |
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | `msedge-tts` 支持的任意格式。 |
 | `audioDir` | string | `audio` | 站点根目录下的公开 MP3 输出路径。拒绝路径穿越。 |
 | `cacheDir` | string | `.hexo-reader-cache` | 本地缓存目录（从站点 base 目录解析）。跨构建持久保存。 |
+| `pruneCache` | boolean | `false` | 仅在本轮已渲染全部文章时清理无引用的本地音频；增量构建不会清理。 |
 | `position` | enum | `bottom-right` | 可选 `bottom-right`、`bottom-left`、`top-right`、`top-left`。 |
 | `buttonLabel` | string | `朗读本文` | 切换按钮的 aria-label / 工具提示。 |
 | `chunkSize` | number | `4000` | 每次 TTS 请求的最大字符数，`200..8000`。 |
@@ -168,6 +174,32 @@ Some intro text.
 The rest of the article.
 ```
 
+### 按文章定制朗读
+
+在文章 front-matter 的 `reader` 对象中可以覆盖音色、语速、音调，并单独撰写
+朗读稿。`text` 只影响音频，网页上显示的文章内容不变：
+
+```yaml
+---
+title: 一篇关于 Hexo 的文章
+reader:
+  voice: zh-CN-YunxiNeural
+  rate: -12
+  pitch: 0
+  text: |
+    欢迎收听这篇文章。今天我们介绍 Hexo。
+  pronunciations:
+    Hexo: 黑克搜
+---
+```
+
+文章级支持 `voice`、`autoVoice`、`rate`、`pitch`、`text` 和
+`pronunciations`。只设置 `voice` 时，该文章固定使用此音色；若同时指定
+`autoVoice`，则按所选路由方式朗读。`reader: false` 或
+`reader: { enable: false }` 仍可禁用朗读。发音规则区分大小写，精确匹配原文；
+较长的词组优先，替换结果不会被再次替换。文章规则覆盖全站同名规则。
+最终朗读文本和音色参数共同决定缓存键。
+
 ### 按路径跳过
 
 ```yaml
@@ -193,8 +225,8 @@ flowchart LR
   E --> F[注入播放器 markup]
 ```
 
-1. Hexo 渲染文章后（`after_post_render` 过滤器），插件从 HTML 中提取适合 TTS
-   的纯文本。代码块、脚本、样式和嵌入式媒体会被移除。
+1. Hexo 渲染文章后（`after_post_render` 过滤器），插件优先使用自定义朗读稿；
+   否则从 HTML 中提取纯文本，跳过代码块、脚本、样式和嵌入式媒体。
 2. 对没有句末标点的段落补停顿，再根据文本、音色设置与合成版本计算 SHA-1 缓存键。
 3. 若 `<cacheDir>/<key>.mp3` 已存在则复用；否则插件通过 [`msedge-tts`][msedge]
    连接 Microsoft Edge TTS WebSocket，并以原子方式写入结果（`*.tmp` → rename）。
@@ -202,7 +234,7 @@ flowchart LR
    播放是安全的。
 5. 生成器在 `<audioDir>/<key>.mp3` 下输出 MP3，并在 `assets/hexo-reader/` 下
    输出共享的 `reader.js` / `reader.css`。
-6. 播放器 markup 以及 `<link>` / `<script>` 片段会追加到文章内容中，随静态站点一起发布。
+6. 播放器 markup 会追加到文章末尾或替换 `{% reader %}`；共享 CSS/JS 由 Hexo 在全站注入。
 
 [msedge]: https://www.npmjs.com/package/msedge-tts
 
@@ -244,6 +276,8 @@ reader:
 
 - 缓存位于 `<site>/<cacheDir>`，跨构建持久保存。
 - 键基于**内容**而非文件名，因此重命名不会触发重新合成，小幅编辑只会重新生成受影响的文章。
+- 增量构建会保留并输出未重新渲染文章所需的缓存音频；即使开启 `pruneCache`，也只在全量渲染时清理。
+- 修改全站音色或术语发音规则后，请运行 `hexo clean && hexo generate`，确保未改动的文章也重新渲染。
 - 若要强制全部重新合成，删除缓存目录即可。
 - 建议的 `.gitignore` 条目：
 

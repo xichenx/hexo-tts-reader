@@ -26,12 +26,15 @@ function setup(ctx) {
   }
 
   const pipeline = new ReaderPipeline(ctx, config, ctx.log);
+  if (typeof ctx.on === 'function') {
+    ctx.on('generateBefore', () => pipeline.beginGeneration());
+  }
 
   registerTag(ctx, config);
+  registerSiteAssets(ctx, config);
   registerGenerator(ctx, pipeline);
 
   ctx.extend.filter.register('after_generate', () => {
-    registerSiteAssets(ctx, config);
     if (config.pruneCache) {
       try {
         pipeline.pruneCache();

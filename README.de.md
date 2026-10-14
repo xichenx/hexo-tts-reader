@@ -14,6 +14,8 @@
 
 <!-- README-I18N:END -->
 
+> Neu in 0.2.0: Stimme, Sprechtempo und Vorlesetext pro Beitrag sowie Ausspracheregeln. Die vollständige Konfiguration steht in [English](./README.md) oder [中文](./README.zh.md).
+
 Der Browser lädt nur eine statische `<audio>`-Datei — kein TTS-Server zur Laufzeit,
 kein API-Schlüssel, keine clientseitige JavaScript-Synthese. Ideal für Blogs, die
 Vorlesefunktion wünschen, ohne ein Backend zu betreiben oder zur Laufzeit für eine Sprach-API zu zahlen.

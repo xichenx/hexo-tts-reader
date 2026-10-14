@@ -14,6 +14,8 @@
 
 <!-- README-I18N:END -->
 
+> Nuevo en 0.2.0: voz, ritmo y guion de lectura por artículo, además de reglas de pronunciación. Consulta [English](./README.md) o [中文](./README.zh.md) para la configuración completa.
+
 El navegador solo carga un archivo `<audio>` estático: sin servidor TTS en tiempo de ejecución,
 sin clave API, sin síntesis JavaScript en el cliente. Ideal para blogs que quieren
 lectura en voz alta sin operar un backend ni pagar por una API de voz en tiempo de ejecución.

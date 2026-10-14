@@ -69,6 +69,21 @@ test('prune with empty dir returns empty list', () => {
   }
 });
 
+test('listKeys returns only non-empty MP3 cache entries', () => {
+  const dir = tmpDir();
+  try {
+    const cache = new AudioCache(dir);
+    assert.deepEqual(cache.listKeys(), []);
+    cache.write(KEY_B, Buffer.from('B'));
+    cache.write(KEY_A, Buffer.from('A'));
+    fs.writeFileSync(path.join(dir, `${KEY_C}.mp3`), '');
+    fs.writeFileSync(path.join(dir, 'README.txt'), 'unrelated');
+    assert.deepEqual(cache.listKeys(), [KEY_A, KEY_B]);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 function makeFakeHexo(baseDir) {
   return {
     base_dir: baseDir,
@@ -94,12 +109,36 @@ test('pipeline.pruneCache deletes files not referenced this build', () => {
     pipeline.cache.write(KEY_B, Buffer.from('B'));
     // Only KEY_A was referenced during this build.
     pipeline.entries.set(KEY_A, { relPath: `audio/${KEY_A}.mp3` });
+    pipeline.processedPostIds.add('_posts/a.md');
+    pipeline.buildGeneratorOutputs({ posts: [{ source: '_posts/a.md' }] });
 
     const count = pipeline.pruneCache();
 
     assert.equal(count, 1);
     assert.ok(pipeline.cache.has(KEY_A));
     assert.ok(!pipeline.cache.has(KEY_B));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('pipeline.pruneCache preserves stale-looking keys on partial builds', () => {
+  const dir = tmpDir();
+  try {
+    const config = resolveConfig({ cacheDir: 'cache' });
+    const ctx = makeFakeHexo(dir);
+    const pipeline = new ReaderPipeline(ctx, config, ctx.log);
+    pipeline.cache.write(KEY_A, Buffer.from('A'));
+    pipeline.cache.write(KEY_B, Buffer.from('B'));
+    pipeline.entries.set(KEY_A, { relPath: `audio/${KEY_A}.mp3` });
+    pipeline.processedPostIds.add('_posts/a.md');
+    pipeline.buildGeneratorOutputs({ posts: { toArray: () => [
+      { source: '_posts/a.md' }, { source: '_posts/b.md' }
+    ] } });
+
+    assert.equal(pipeline.pruneCache(), 0);
+    assert.ok(pipeline.cache.has(KEY_A));
+    assert.ok(pipeline.cache.has(KEY_B));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

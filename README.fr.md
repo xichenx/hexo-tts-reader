@@ -14,6 +14,8 @@
 
 <!-- README-I18N:END -->
 
+> Nouveauté 0.2.0 : voix, débit et texte lu personnalisables par article, avec des règles de prononciation. Consultez [English](./README.md) ou [中文](./README.zh.md) pour la configuration complète.
+
 Le navigateur ne charge qu'un fichier `<audio>` statique — pas de serveur TTS à l'exécution,
 pas de clé API, pas de synthèse JavaScript côté client. Idéal pour les blogs qui souhaitent
 la lecture à voix haute sans exploiter de backend ni payer une API vocale à l'exécution.
