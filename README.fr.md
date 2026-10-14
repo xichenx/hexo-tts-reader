@@ -46,6 +46,8 @@ paragraphes inchangés réutilisent leur audio et un bilan apparaît après la g
 
 ## Aperçu
 
+![Aperçu du lecteur : thèmes clair et sombre et bouton casque replié](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 Ouvrez [`preview.html`](./preview.html) dans votre navigateur pour essayer l'interface du lecteur
 flottant en mode clair et sombre — sans site Hexo ni appel réseau TTS requis.
 

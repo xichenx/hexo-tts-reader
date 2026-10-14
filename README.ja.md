@@ -46,6 +46,8 @@ API キー、クライアント側 JavaScript による合成は不要です。�
 
 ## プレビュー
 
+![プレーヤーのプレビュー：ライトテーマ、ダークテーマ、折りたたみ時のヘッドホンボタン](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 ブラウザで [`preview.html`](./preview.html) を開くと、Hexo サイトや TTS の
 ネットワーク呼び出しなしで、ライト／ダークモードのフローティングプレーヤー UI を
 試せます。

@@ -46,6 +46,8 @@ Absatz-Audios, lokalisierte Player-Steuerung und ein Build-Bericht.
 
 ## Vorschau
 
+![Player-Vorschau: helles und dunkles Design sowie eingeklappte Kopfhörertaste](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 Öffnen Sie [`preview.html`](./preview.html) in Ihrem Browser, um die schwebende Player-Oberfläche
 im Hell- und Dunkelmodus auszuprobieren — ohne Hexo-Site oder TTS-Netzwerkaufruf.
 

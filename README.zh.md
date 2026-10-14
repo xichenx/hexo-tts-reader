@@ -39,6 +39,8 @@
 
 ## 预览
 
+![播放器 UI 预览：浅色主题、深色主题与收起后的耳机按钮](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 在浏览器中打开 [`preview.html`](./preview.html)，即可在浅色与深色模式下试用悬浮播放器
 UI——无需 Hexo 站点或 TTS 网络请求。
 

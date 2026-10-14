@@ -47,6 +47,8 @@ parágrafos inalterados é reutilizado e o resultado da geração é resumido.
 
 ## Pré-visualização
 
+![Prévia do player: temas claro e escuro e botão de fones recolhido](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 Abra [`preview.html`](./preview.html) no navegador para experimentar a interface do
 player flutuante em modo claro e escuro — sem site Hexo ou chamada de rede TTS.
 

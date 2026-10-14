@@ -40,6 +40,8 @@ read-aloud without operating a backend or paying for a speech API at runtime.
 
 ## Preview
 
+![Player UI preview: light theme, dark theme, and collapsed headphone button](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 Open [`preview.html`](./preview.html) in your browser to try the floating player
 UI in light and dark mode — no Hexo site or TTS network call required.
 

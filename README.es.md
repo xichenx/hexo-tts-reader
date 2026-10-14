@@ -46,6 +46,8 @@ reutiliza el audio de párrafos sin cambios y se muestran informes de compilaci�
 
 ## Vista previa
 
+![Vista previa del reproductor: temas claro y oscuro y botón de auriculares contraído](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 Abre [`preview.html`](./preview.html) en tu navegador para probar la interfaz del reproductor
 flotante en modo claro y oscuro — sin necesidad de un sitio Hexo ni de una llamada de red TTS.
 

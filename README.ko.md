@@ -46,6 +46,8 @@
 
 ## 미리보기
 
+![플레이어 미리보기: 밝은 테마, 어두운 테마, 접힌 헤드폰 버튼](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
 브라우저에서 [`preview.html`](./preview.html)을 열면 Hexo 사이트나 TTS
 네트워크 호출 없이 라이트/다크 모드의 플로팅 플레이어 UI를
 체험할 수 있습니다.
