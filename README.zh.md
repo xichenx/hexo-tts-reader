@@ -1,3 +1,7 @@
+<p>
+  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+</p>
+
 # hexo-tts-reader
 
 > 一款 Hexo 插件，可将文章朗读出来。它在**生成阶段**使用 Microsoft Edge 在线 TTS

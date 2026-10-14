@@ -1,3 +1,7 @@
+<p>
+  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+</p>
+
 # hexo-tts-reader
 
 > Un plugin de Hexo que lee tus entradas en voz alta. Genera un MP3 para cada entrada en

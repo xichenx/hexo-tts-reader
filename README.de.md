@@ -1,3 +1,7 @@
+<p>
+  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+</p>
+
 # hexo-tts-reader
 
 > Ein Hexo-Plugin, das Ihre Beiträge vorliest. Es erstellt beim

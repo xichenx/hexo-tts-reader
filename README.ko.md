@@ -1,3 +1,7 @@
+<p>
+  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+</p>
+
 # hexo-tts-reader
 
 > Hexo 게시글을 소리 내어 읽어 주는 플러그인입니다. **생성 시점**에 Microsoft Edge 온라인 TTS로
