@@ -1,16 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">Hexoブログに、声を。ビルド時に自然な読み上げ音声を生成します。</p>
 
-> Hexo 記事を音声で読み上げるプラグインです。**生成時**に Microsoft Edge オンライン TTS
-> で各投稿の MP3 を生成し、結果をキャッシュして、レンダリングされたページに
-> フローティングオーディオプレーヤーを注入します。
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#プレビュー">プレビュー</a> · <a href="#インストール">インストール</a> · <a href="#設定">設定</a></p>
 
 <!-- README-I18N:START -->
 
@@ -28,7 +31,8 @@ API キー、クライアント側 JavaScript による合成は不要です。�
 `hexo reader:preview _posts/example.md` で短い音声を試聴できます。変更していない段落の
 音声を再利用し、ビルド結果も表示します。プレーヤーの表示はサイト言語に対応します。
 
-## 目次
+<details>
+<summary>目次</summary>
 
 - [プレビュー](#プレビュー)
 - [機能](#機能)
@@ -45,6 +49,8 @@ API キー、クライアント側 JavaScript による合成は不要です。�
 - [開発](#開発)
 - [関連リンク](#関連リンク)
 - [ライセンス](#ライセンス)
+
+</details>
 
 ---
 

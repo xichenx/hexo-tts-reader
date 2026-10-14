@@ -1,16 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">Gib deinem Hexo-Blog eine Stimme. Natürlich klingende Sprachausgabe, beim Build erzeugt.</p>
 
-> Ein Hexo-Plugin, das Ihre Beiträge vorliest. Es erstellt beim
-> **Generieren** für jeden Beitrag eine MP3-Datei mit Microsoft Edge Online-TTS, speichert das Ergebnis im Cache und
-> fügt einen schwebenden Audioplayer in die gerenderte Seite ein.
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#vorschau">Vorschau</a> · <a href="#installation">Installation</a> · <a href="#konfiguration">Konfiguration</a></p>
 
 <!-- README-I18N:START -->
 
@@ -28,7 +31,8 @@ Neu in 0.3.0: Vorschau mit `hexo reader:inspect _posts/beispiel.md` oder
 `hexo reader:preview _posts/beispiel.md`, Wiederverwendung unveränderter
 Absatz-Audios, lokalisierte Player-Steuerung und ein Build-Bericht.
 
-## Inhaltsverzeichnis
+<details>
+<summary>Inhaltsverzeichnis</summary>
 
 - [Vorschau](#vorschau)
 - [Funktionen](#funktionen)
@@ -45,6 +49,8 @@ Absatz-Audios, lokalisierte Player-Steuerung und ein Build-Bericht.
 - [Entwicklung](#entwicklung)
 - [Verwandte Links](#verwandte-links)
 - [Lizenz](#lizenz)
+
+</details>
 
 ---
 

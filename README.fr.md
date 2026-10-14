@@ -1,16 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">Donnez une voix à votre blog Hexo. Une narration naturelle, générée à la compilation.</p>
 
-> Un plugin Hexo qui lit vos articles à voix haute. Il génère un MP3 pour chaque article au
-> **moment de la génération** en utilisant Microsoft Edge TTS en ligne, met le résultat en cache et
-> injecte un lecteur audio flottant dans la page rendue.
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#aperçu">Aperçu</a> · <a href="#installation">Installation</a> · <a href="#configuration">Configuration</a></p>
 
 <!-- README-I18N:START -->
 
@@ -28,7 +31,8 @@ Nouveau en 0.3.0 : inspectez le texte lu avec `hexo reader:inspect _posts/exempl
 ou écoutez un extrait avec `hexo reader:preview _posts/exemple.md`. Les
 paragraphes inchangés réutilisent leur audio et un bilan apparaît après la génération.
 
-## Table des matières
+<details>
+<summary>Table des matières</summary>
 
 - [Aperçu](#aperçu)
 - [Fonctionnalités](#fonctionnalités)
@@ -45,6 +49,8 @@ paragraphes inchangés réutilisent leur audio et un bilan apparaît après la g
 - [Développement](#développement)
 - [Liens connexes](#liens-connexes)
 - [Licence](#licence)
+
+</details>
 
 ---
 

@@ -1,16 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">Dale voz a tu blog Hexo. Narración natural, generada al construir el sitio.</p>
 
-> Un plugin de Hexo que lee tus entradas en voz alta. Genera un MP3 para cada entrada en
-> **tiempo de generación** usando Microsoft Edge TTS en línea, almacena el resultado en caché e
-> inyecta un reproductor de audio flotante en la página renderizada.
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#vista-previa">Vista previa</a> · <a href="#instalación">Instalación</a> · <a href="#configuración">Configuración</a></p>
 
 <!-- README-I18N:START -->
 
@@ -28,7 +31,8 @@ Nuevo en 0.3.0: inspecciona la narración con `hexo reader:inspect _posts/ejempl
 o escucha una muestra con `hexo reader:preview _posts/ejemplo.md`. También se
 reutiliza el audio de párrafos sin cambios y se muestran informes de compilación.
 
-## Tabla de contenidos
+<details>
+<summary>Tabla de contenidos</summary>
 
 - [Vista previa](#vista-previa)
 - [Características](#características)
@@ -45,6 +49,8 @@ reutiliza el audio de párrafos sin cambios y se muestran informes de compilaci�
 - [Desarrollo](#desarrollo)
 - [Enlaces relacionados](#enlaces-relacionados)
 - [Licencia](#licencia)
+
+</details>
 
 ---
 

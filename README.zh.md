@@ -1,15 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">让博客文章开口说话。构建时生成自然语音，给读者多一种阅读方式。</p>
 
-> 一款 Hexo 插件，可将文章朗读出来。它在**生成阶段**使用 Microsoft Edge 在线 TTS
-> 为每篇文章合成 MP3，缓存结果，并在渲染后的页面中注入一个悬浮音频播放器。
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#预览">预览</a> · <a href="#安装">安装</a> · <a href="#配置">配置</a></p>
 
 <!-- README-I18N:START -->
 
@@ -21,7 +25,8 @@
 也无需客户端 JavaScript 合成。适合希望提供朗读功能、又不想运维后端或在运行时
 为语音 API 付费的博客。
 
-## 目录
+<details>
+<summary>目录</summary>
 
 - [预览](#预览)
 - [功能特性](#功能特性)
@@ -38,6 +43,8 @@
 - [开发](#开发)
 - [相关链接](#相关链接)
 - [许可证](#许可证)
+
+</details>
 
 ---
 

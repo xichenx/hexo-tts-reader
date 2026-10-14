@@ -1,16 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">Hexo 블로그에 목소리를 더하세요. 빌드할 때 자연스러운 낭독 음성을 생성합니다.</p>
 
-> Hexo 게시글을 소리 내어 읽어 주는 플러그인입니다. **생성 시점**에 Microsoft Edge 온라인 TTS로
-> 각 게시글의 MP3를 만들고, 결과를 캐시한 뒤 렌더링된 페이지에
-> 플로팅 오디오 플레이어를 주입합니다.
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#미리보기">미리보기</a> · <a href="#설치">설치</a> · <a href="#설정">설정</a></p>
 
 <!-- README-I18N:START -->
 
@@ -28,7 +31,8 @@
 `hexo reader:preview _posts/example.md`로 짧은 음성을 미리 들을 수 있습니다.
 변경되지 않은 문단의 오디오를 재사용하며 빌드 결과와 현지화된 플레이어를 제공합니다.
 
-## 목차
+<details>
+<summary>목차</summary>
 
 - [미리보기](#미리보기)
 - [기능](#기능)
@@ -45,6 +49,8 @@
 - [개발](#개발)
 - [관련 링크](#관련-링크)
 - [라이선스](#라이선스)
+
+</details>
 
 ---
 

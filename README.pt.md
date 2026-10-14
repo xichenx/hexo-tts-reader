@@ -1,16 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">Dê voz ao seu blog Hexo. Narração natural, gerada durante a construção do site.</p>
 
-> Um plugin Hexo que lê seus posts em voz alta. Ele gera um MP3 para cada post na
-> **geração** usando o TTS online do Microsoft Edge, armazena o resultado em cache e
-> injeta um player de áudio flutuante na página renderizada.
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#pré-visualização">Pré-visualização</a> · <a href="#instalação">Instalação</a> · <a href="#configuração">Configuração</a></p>
 
 <!-- README-I18N:START -->
 
@@ -29,7 +32,8 @@ Novo na versão 0.3.0: inspecione a narração com `hexo reader:inspect _posts/e
 ou ouça uma amostra com `hexo reader:preview _posts/exemplo.md`. O áudio de
 parágrafos inalterados é reutilizado e o resultado da geração é resumido.
 
-## Índice
+<details>
+<summary>Índice</summary>
 
 - [Pré-visualização](#pré-visualização)
 - [Recursos](#recursos)
@@ -46,6 +50,8 @@ parágrafos inalterados é reutilizado e o resultado da geração é resumido.
 - [Desenvolvimento](#desenvolvimento)
 - [Links relacionados](#links-relacionados)
 - [Licença](#licença)
+
+</details>
 
 ---
 

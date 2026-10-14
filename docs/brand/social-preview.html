@@ -7,25 +7,26 @@
   <link rel="icon" type="image/png" href="../../assets/brand/icon-64.png">
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; color: #302923; background: #fff8f2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    .card { width: 1280px; height: 640px; padding: 68px 84px; position: relative; overflow: hidden; }
-    .eyebrow { font-size: 14px; letter-spacing: 3px; font-weight: 600; color: #b97d62; }
-    .identity { display: flex; gap: 52px; align-items: center; margin-top: 66px; }
-    .identity img { width: 244px; height: 244px; object-fit: contain; }
-    h1 { font-size: 62px; font-weight: 700; letter-spacing: -2.6px; margin: 0 0 20px; line-height: 1.15; }
-    .tagline { font-size: 27px; font-weight: 400; color: #968276; margin: 0; }
-    footer { position: absolute; bottom: 62px; left: 84px; right: 84px; padding-top: 26px; border-top: 1px solid #efdfd3; display: flex; justify-content: space-between; color: #a28a7b; font-size: 15px; }
-    .features { color: #b37252; }
+    body { margin: 0; color: #edf1ff; background: #101627; font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .card { width: 1280px; height: 640px; padding: 62px 80px; position: relative; overflow: hidden; background: radial-gradient(ellipse at 12% 48%, #23325580, transparent 49%); }
+    .eyebrow { color: #9ba8ca; font-size: 13px; font-weight: 600; letter-spacing: 3.2px; }
+    .identity { display: flex; align-items: center; gap: 42px; margin-top: 54px; }
+    .identity img { width: 240px; height: 240px; }
+    h1 { margin: 0 0 18px; font-size: 73px; font-weight: 600; letter-spacing: -3.6px; line-height: 1.2; }
+    h1 strong { font-weight: 600; letter-spacing: -2px; color: #9ba5ff; }
+    .tagline { margin: 0; color: #b5c1df; font-size: 30px; }
+    footer { position: absolute; bottom: 58px; left: 80px; right: 80px; border-top: 1px solid #2b354d; padding-top: 25px; display: flex; justify-content: space-between; color: #7f8aa8; font-size: 14px; }
+    footer span:first-child { color: #a2afce; }
   </style>
 </head>
 <body>
   <main class="card">
-    <div class="eyebrow">BLOG TEXT → SPEECH · HEXO PLUGIN</div>
+    <div class="eyebrow">TEXT TO SPEECH FOR HEXO</div>
     <div class="identity">
-      <img src="../../assets/brand/icon.png" alt="Blog article converted to speech">
-      <div><h1>hexo-tts-reader</h1><p class="tagline">Turn your blog posts into speech.</p></div>
+      <img src="../../assets/brand/icon.svg" alt="Article lines flowing into a sound wave">
+      <div><h1>hexo <strong>tts</strong> reader</h1><p class="tagline">Your blog, out loud.</p></div>
     </div>
-    <footer><span class="features">Article narration &nbsp; / &nbsp; Edge TTS &nbsp; / &nbsp; No API key</span><span>github.com/xichenx/hexo-tts-reader</span></footer>
+    <footer><span>Natural voices. Static audio. Made for reading.</span><span>github.com/xichenx/hexo-tts-reader</span></footer>
   </main>
 </body>
 </html>

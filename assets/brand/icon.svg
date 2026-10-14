@@ -1,18 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" role="img" aria-labelledby="title desc">
   <title id="title">hexo-tts-reader</title>
-  <desc id="desc">A blog article in a browser window with a speaking symbol: blog text converted to speech.</desc>
-  <rect x="16" y="16" width="224" height="224" rx="52" fill="#F16B45"/>
-  <rect x="44" y="55" width="162" height="145" rx="20" fill="#FFF8ED"/>
-  <path d="M44 88h162" stroke="#F16B45" stroke-width="6"/>
-  <g fill="#F16B45">
-    <circle cx="63" cy="72" r="4"/>
-    <circle cx="77" cy="72" r="4"/>
-    <rect x="62" y="106" width="92" height="10" rx="5"/>
-    <rect x="62" y="128" width="74" height="7" rx="3.5"/>
-    <rect x="62" y="146" width="58" height="7" rx="3.5"/>
-    <rect x="62" y="164" width="42" height="7" rx="3.5"/>
+  <desc id="desc">Three lines of an article flow into a continuous sound wave: a blog finding its voice.</desc>
+  <defs>
+    <linearGradient id="voice" x1="32" y1="166" x2="216" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7270F1"/>
+      <stop offset=".6" stop-color="#546CE7"/>
+      <stop offset="1" stop-color="#43ADCE"/>
+    </linearGradient>
+  </defs>
+  <g stroke="url(#voice)" stroke-width="21" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M34 82h51c24 0 19 94 43 94s22-128 46-128 18 80 44 80"/>
+    <path d="M34 117h38M34 152h48"/>
   </g>
-  <circle cx="177" cy="170" r="40" fill="#FFF8ED" stroke="#F16B45" stroke-width="8"/>
-  <path d="M154 164h10l13-11v34l-13-11h-10a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3Z" fill="#F16B45"/>
-  <path d="M184 161a13 13 0 0 1 0 18m7-25a23 23 0 0 1 0 32" stroke="#F16B45" stroke-width="5" stroke-linecap="round"/>
 </svg>

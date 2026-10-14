@@ -1,16 +1,19 @@
-<p>
-  <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/icon-192.png" width="96" height="96" alt="hexo-tts-reader logo">
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-dark.png">
+    <img src="https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/assets/brand/lockup-light.png" width="840" alt="hexo-tts-reader — Your blog, out loud. Text to speech for Hexo.">
+  </picture>
 </p>
 
-# hexo-tts-reader
+<p align="center">Give your Hexo blog a voice. Natural-sounding narration, generated at build time.</p>
 
-> A Hexo plugin that reads your posts aloud. It builds an MP3 for each post at
-> **generate-time** using Microsoft Edge online TTS, caches the result, and
-> injects a floating audio player into the rendered page.
+<p align="center">
+  <a href="https://www.npmjs.com/package/hexo-tts-reader"><img src="https://img.shields.io/npm/v/hexo-tts-reader.svg" alt="npm version"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/hexo-tts-reader.svg" alt="Node.js version"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/hexo-tts-reader.svg" alt="License"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/hexo-tts-reader.svg)](https://www.npmjs.com/package/hexo-tts-reader)
-[![node](https://img.shields.io/node/v/hexo-tts-reader.svg)](https://nodejs.org/)
-[![license](https://img.shields.io/npm/l/hexo-tts-reader.svg)](./LICENSE)
+<p align="center"><a href="#preview">Preview</a> · <a href="#install">Install</a> · <a href="#configuration">Configuration</a></p>
 
 <!-- README-I18N:START -->
 
@@ -22,7 +25,8 @@ The browser only ever loads a static `<audio>` file — no runtime TTS server,
 no API key, no client-side JavaScript synthesis. Ideal for blogs that want
 read-aloud without operating a backend or paying for a speech API at runtime.
 
-## Table of contents
+<details>
+<summary>Table of contents</summary>
 
 - [Preview](#preview)
 - [Features](#features)
@@ -39,6 +43,8 @@ read-aloud without operating a backend or paying for a speech API at runtime.
 - [Development](#development)
 - [Related links](#related-links)
 - [License](#license)
+
+</details>
 
 ---
 
