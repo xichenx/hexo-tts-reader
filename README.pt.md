@@ -21,6 +21,10 @@ de execução, sem chave de API, sem síntese JavaScript no cliente. Ideal para 
 que querem leitura em voz alta sem operar um backend ou pagar por uma API de voz
 em tempo de execução.
 
+Novo na versão 0.3.0: inspecione a narração com `hexo reader:inspect _posts/exemplo.md`
+ou ouça uma amostra com `hexo reader:preview _posts/exemplo.md`. O áudio de
+parágrafos inalterados é reutilizado e o resultado da geração é resumido.
+
 ## Índice
 
 - [Pré-visualização](#pré-visualização)
@@ -299,7 +303,7 @@ por hash de conteúdo sem acessar a rede.
 ## Notas e limitações
 
 - A síntese ocorre no momento do build e precisa de acesso de rede ao Edge TTS.
-- Requer `msedge-tts` >= 2.0.5 (incluído neste plugin). A Microsoft alterou a API
+- Requer `msedge-tts` 2.1.0 (instalado com este plugin). A Microsoft alterou a API
   Edge Read Aloud no final de 2025; clientes mais antigos recebem uma página HTML
   de erro em vez de áudio.
 - Cada post vira um MP3; posts muito longos são divididos em chunks e concatenados.

@@ -20,6 +20,10 @@
 클라이언트 측 JavaScript 합성이 필요 없습니다. 백엔드를 운영하거나
 실행 시점에 음성 API 비용을 지불하지 않고도 낭독 기능을 원하는 블로그에 적합합니다.
 
+0.3.0에서는 `hexo reader:inspect _posts/example.md`로 낭독 내용을 확인하고
+`hexo reader:preview _posts/example.md`로 짧은 음성을 미리 들을 수 있습니다.
+변경되지 않은 문단의 오디오를 재사용하며 빌드 결과와 현지화된 플레이어를 제공합니다.
+
 ## 목차
 
 - [미리보기](#미리보기)
@@ -295,7 +299,7 @@ Hexo 로그에서 `hexo-reader: TTS failed for "<title>"`를 확인하세요. TT
 ## 참고 및 제한 사항
 
 - 합성은 빌드 시점에 이루어지며 Edge TTS 네트워크 접근이 필요합니다.
-- `msedge-tts` >= 2.0.5가 필요합니다(본 플러그인에 포함). Microsoft는 2025년 말
+- `msedge-tts` 2.1.0이 필요합니다(본 플러그인과 함께 설치). Microsoft는 2025년 말
   Edge Read Aloud API를 변경했습니다. 이전 클라이언트는 오디오 대신 HTML 오류
   페이지를 받습니다.
 - 각 게시글은 MP3 하나가 됩니다. 매우 긴 게시글은 청크로 나뉘어 연결됩니다.

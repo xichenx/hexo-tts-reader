@@ -132,10 +132,12 @@ test('buildPlayerMarkup uses the configured label for accessible play state', ()
     audioUrl: '/a.mp3',
     position: 'bottom-right',
     buttonLabel: 'Listen now',
-    postTitle: 'Article'
+    postTitle: 'Article',
+    locale: 'en'
   });
   assert.ok(html.includes('aria-label="Listen now"'));
-  assert.ok(html.includes('data-label-pause="Listen now（暂停）"'));
+  assert.ok(html.includes('data-label-pause="Pause reading"'));
+  assert.ok(html.includes('data-label-load-failed="Audio could not load"'));
   assert.ok(html.includes('preload="metadata"'));
   assert.ok(html.includes('class="hexo-reader__collapse"'));
   assert.ok(html.includes('class="hexo-reader__status"'));

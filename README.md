@@ -43,19 +43,26 @@ read-aloud without operating a backend or paying for a speech API at runtime.
 Open [`preview.html`](./preview.html) in your browser to try the floating player
 UI in light and dark mode — no Hexo site or TTS network call required.
 
+To inspect a real post's final spoken text, voice, and chunk plan without
+calling TTS, run `hexo reader:inspect _posts/example.md`. To synthesize a
+short local sample (up to 300 characters), run
+`hexo reader:preview _posts/example.md`. The latter requires TTS network
+access and prints the MP3 path under `.hexo-reader-cache/previews/`.
+
 ---
 
 ## Features
 
 - **Build-time synthesis** — no runtime TTS service, no API key required
-- **Content-hash cache** — unchanged posts are not re-synthesized between builds
+- **Article and paragraph caches** — editing one paragraph can reuse the rest of the audio
 - **Auto-injection** into post pages, or manual `{% reader %}` tag for precise placement
 - **Floating player** with play / pause / seek / playback speed (0.75× – 2×)
-- **Light & dark themes**, keyboard accessible
+- **Light & dark themes**, localized controls, keyboard and screen-reader support
 - **Smart text extraction** — skips code blocks, scripts, styles, and embedded media
 - **Author-controlled narration** — per-post voice, pace, script, and pronunciation rules
 - **Long-post safe** — chunks input on sentence boundaries and concatenates MP3 frames
 - **Per-post opt-out** via front-matter
+- **Build report** with cache hits, skipped posts, failures, and chunk reuse
 
 ---
 
@@ -93,11 +100,10 @@ pnpm add hexo-tts-reader
    ```
 
 3. Run `hexo clean && hexo generate` (or `hexo server`). Each post page will
-   gain a floating player button (default label: `朗读本文`) in the bottom-right
-   corner. Change `buttonLabel` in config for your locale.
+   gain a floating player button in the bottom-right corner. Its labels follow
+   the site's language; set `buttonLabel` to override the play action.
 
-That's it. On subsequent builds, the content-hash cache means only changed
-posts hit the TTS service.
+That's it. On subsequent builds, unchanged articles and paragraphs reuse cached audio.
 
 ---
 
@@ -109,6 +115,8 @@ Full config with defaults:
 reader:
   enable: true
   autoInject: true
+  locale: auto                              # site language; supports zh/en/ja/ko/es/fr/de/pt
+  cacheChunks: true                         # reuse unchanged paragraphs after edits
   voice: zh-CN-XiaoxiaoNeural
   autoVoice: article                         # article | true | false
   pronunciations:                            # exact text -> spoken form
@@ -120,7 +128,7 @@ reader:
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
   pruneCache: false                          # clean orphan audio after full renders
   position: bottom-right                     # bottom-right | bottom-left | top-right | top-left
-  buttonLabel: 朗读本文
+  buttonLabel: 朗读本文                        # optional; defaults to localized label
   chunkSize: 4000                            # split long posts into <= N chars per request
   maxTextLength: 100000                      # hard upper bound per post
   failOnError: false                         # if true, build fails when TTS fails
@@ -134,6 +142,8 @@ reader:
 | --- | --- | --- | --- |
 | `enable` | boolean | `true` | Master switch. |
 | `autoInject` | boolean | `true` | Append the player to every post automatically. When disabled, only posts with `{% reader %}` are synthesized. |
+| `locale` | string | site language | Player labels; `auto` follows Hexo's `language` (supported: zh/en/ja/ko/es/fr/de/pt). |
+| `cacheChunks` | boolean | `true` | Store paragraph MP3s under `<cacheDir>/chunks` and reuse unaffected paragraphs. |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | Fallback voice. Setting a custom `voice` without `autoVoice` uses that voice for every post. |
 | `autoVoice` | `article` / boolean | `article` | Choose one voice for the detected article language; `true` switches by script within a post; `false` keeps `voice` fixed. |
 | `voices` | object | built-in map | Voice ids for `zh`, `en`, `ja`, `ko`, and `ru` when language routing is enabled. |
@@ -143,9 +153,9 @@ reader:
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | Any format supported by `msedge-tts`. |
 | `audioDir` | string | `audio` | Public path under the site root where MP3s are emitted. Path traversal is rejected. |
 | `cacheDir` | string | `.hexo-reader-cache` | Local cache dir (resolved from your site's base dir). Survives across builds. |
-| `pruneCache` | boolean | `false` | Remove orphaned audio from the local cache only when every current post was rendered in this build. Incremental builds keep existing audio. |
+| `pruneCache` | boolean | `false` | Remove orphaned article and paragraph audio only after a complete build. Incremental builds keep existing audio. |
 | `position` | enum | `bottom-right` | One of `bottom-right`, `bottom-left`, `top-right`, `top-left`. |
-| `buttonLabel` | string | `朗读本文` | Aria-label / tooltip of the toggle button. |
+| `buttonLabel` | string | localized | Aria-label of the play button; defaults to the selected locale's text. |
 | `chunkSize` | number | `4000` | Max characters per TTS request, `200..8000`. |
 | `maxTextLength` | number | `100000` | Hard cap per post, `100..1000000`. Longer text is truncated. |
 | `failOnError` | boolean | `false` | When `true`, a TTS failure aborts the whole `hexo generate`. |
@@ -235,8 +245,9 @@ flowchart LR
    the HTML. Code blocks, scripts, styles, and embedded media are removed.
 2. Paragraph boundaries without punctuation receive a sentence pause. A SHA-1 of the text and voice settings (including the synthesis revision) becomes the cache key.
 3. If `<cacheDir>/<key>.mp3` already exists, it is reused. Otherwise the
-   plugin opens a WebSocket to Microsoft Edge TTS (via [`msedge-tts`][msedge])
-   and writes the result atomically (`*.tmp` → rename).
+   plugin reuses unchanged paragraphs from `<cacheDir>/chunks`, synthesizes
+   missing chunks via [`msedge-tts`][msedge], and writes the combined result
+   atomically (`*.tmp` → rename).
 4. Long inputs are chunked on sentence boundaries (Chinese & English
    punctuation), synthesized chunk-by-chunk, and concatenated as raw MP3
    frames — which is safe for playback.
@@ -288,11 +299,13 @@ not a guarantee that one voice sounds better on every text.
 ## Cache
 
 - The cache lives at `<site>/<cacheDir>` and survives across builds.
+- With `cacheChunks: true`, paragraph audio lives in `<cacheDir>/chunks`.
+  Existing whole-article cache files remain valid.
 - It is keyed on the **content**, not the file name, so renames don't trigger
   re-synthesis and minor edits regenerate only the affected posts.
 - Incremental builds emit cached MP3s for unchanged pages as well as newly
   rendered posts. With `pruneCache: true`, cleanup runs only when Hexo has
-  rendered every current post; partial and no-op builds preserve the cache.
+  rendered every current post; partial and no-op builds preserve both caches.
 - After changing site-wide narration settings or pronunciation rules, run
   `hexo clean && hexo generate` so unchanged posts are rendered again.
 - To force a full re-synthesis, delete the cache directory.
@@ -351,6 +364,11 @@ Make sure your deployment includes the `audio/` and `assets/hexo-reader/`
 directories. If you set a non-default `audioDir`, ensure it's not blocked by
 your CDN rules.
 
+**Synthesis returns HTTP 403.**
+Use plugin 0.3.0 or later (which installs `msedge-tts` 2.1.0), and check the
+build host's clock and proxy. The upstream Edge Read Aloud endpoint can change;
+connectivity is not guaranteed in every network environment.
+
 **I want to ship the site without ever calling TTS.**
 Pre-populate `<cacheDir>` with previously-generated MP3 files. The plugin
 re-uses them by content hash without hitting the network.
@@ -360,9 +378,9 @@ re-uses them by content hash without hitting the network.
 ## Notes & limitations
 
 - Synthesis happens at build time and needs network access to Edge TTS.
-- Requires `msedge-tts` >= 2.0.5 (bundled with this plugin). Microsoft changed
-  the Edge Read Aloud API in late 2025; older clients receive an HTML error
-  page instead of audio.
+- Requires `msedge-tts` 2.1.0 (installed with this plugin). Microsoft's
+  Edge Read Aloud API can change; older clients may return an error page or
+  HTTP 403 instead of audio.
 - Each post becomes one MP3; very long posts are chunked and concatenated.
 - If TTS fails for a post and `failOnError` is `false` (default), the player
   is simply not injected for that post and the build continues.

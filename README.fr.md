@@ -20,6 +20,10 @@ Le navigateur ne charge qu'un fichier `<audio>` statique — pas de serveur TTS 
 pas de clé API, pas de synthèse JavaScript côté client. Idéal pour les blogs qui souhaitent
 la lecture à voix haute sans exploiter de backend ni payer une API vocale à l'exécution.
 
+Nouveau en 0.3.0 : inspectez le texte lu avec `hexo reader:inspect _posts/exemple.md`
+ou écoutez un extrait avec `hexo reader:preview _posts/exemple.md`. Les
+paragraphes inchangés réutilisent leur audio et un bilan apparaît après la génération.
+
 ## Table des matières
 
 - [Aperçu](#aperçu)
@@ -296,7 +300,7 @@ par hash de contenu sans accéder au réseau.
 ## Notes et limitations
 
 - La synthèse a lieu à la compilation et nécessite un accès réseau à Edge TTS.
-- Nécessite `msedge-tts` >= 2.0.5 (fourni avec ce plugin). Microsoft a modifié l'API Edge Read
+- Nécessite `msedge-tts` 2.1.0 (installé avec ce plugin). Microsoft a modifié l'API Edge Read
   Aloud fin 2025 ; les anciens clients reçoivent une page d'erreur HTML au lieu de l'audio.
 - Chaque article devient un MP3 ; les articles très longs sont découpés et concaténés.
 - Si le TTS échoue pour un article et que `failOnError` est `false` (par défaut), le lecteur

@@ -154,6 +154,9 @@ test('Hexo front matter controls the authored narration and cache route',
         `<html><head></head><body>${locals.page.content}</body></html>`);
       ctx.config.reader = { pronunciations: { Hexo: '黑克搜' }, failOnError: true, retries: 0 };
       setup(ctx);
+      const inspected = await ctx.call('reader:inspect', { _: ['_posts/custom.md'] });
+      assert.equal(inspected.text, '欢迎来到 黑克搜。');
+      assert.deepEqual(inspected.voices, ['zh-CN-YunxiNeural']);
       await ctx.call('generate', {});
 
       const post = ctx.model('Post').findOne({ source: '_posts/custom.md' });

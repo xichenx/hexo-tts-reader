@@ -1,6 +1,6 @@
 {
   "name": "hexo-tts-reader",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A Hexo plugin that reads your posts aloud. Builds MP3 audio for each post at generate-time using Edge TTS, and injects a floating player into post pages.",
   "main": "index.js",
   "files": [
@@ -36,7 +36,12 @@
     "node": ">=18"
   },
   "dependencies": {
-    "msedge-tts": "^2.0.5"
+    "hexo-front-matter": "^4.2.1",
+    "msedge-tts": "2.1.0"
+  },
+  "devDependencies": {
+    "hexo": "^7.3.0",
+    "jsdom": "^25.0.1"
   },
   "peerDependencies": {
     "hexo": ">=5.0.0"

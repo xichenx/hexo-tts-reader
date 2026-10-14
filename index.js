@@ -5,6 +5,7 @@ const { ReaderPipeline } = require('./lib/injector');
 const { registerSiteAssets } = require('./lib/injectSiteAssets');
 const { registerTag } = require('./lib/tag');
 const { registerGenerator } = require('./lib/generator');
+const { registerInspectCommands } = require('./lib/inspect');
 
 function getHexo() {
   if (typeof hexo !== 'undefined' && hexo) {
@@ -18,7 +19,7 @@ function setup(ctx) {
     return;
   }
   const userCfg = (ctx.config && ctx.config.reader) || {};
-  const config = resolveConfig(userCfg);
+  const config = resolveConfig(userCfg, ctx.config && ctx.config.language);
 
   if (!config.enable) {
     ctx.log.info('hexo-reader: disabled via config');
@@ -33,8 +34,10 @@ function setup(ctx) {
   registerTag(ctx, config);
   registerSiteAssets(ctx, config);
   registerGenerator(ctx, pipeline);
+  registerInspectCommands(ctx, pipeline);
 
   ctx.extend.filter.register('after_generate', () => {
+    pipeline.report();
     if (config.pruneCache) {
       try {
         pipeline.pruneCache();
@@ -45,6 +48,7 @@ function setup(ctx) {
   });
 
   ctx.extend.filter.register('after_post_render', async function afterPostRender(data) {
+    if (pipeline.inspectOnly) return data;
     try {
       await pipeline.processPost(data);
     } catch (err) {
@@ -52,6 +56,7 @@ function setup(ctx) {
         throw err;
       }
       ctx.log.warn(`hexo-reader: ${err.message}`);
+      pipeline.record(data, 'failed', err.message);
     }
     return data;
   });

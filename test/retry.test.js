@@ -98,7 +98,7 @@ test('formatProsodyValue converts numeric config to SSML values', () => {
 
 test('speech preparation adds pauses only where block text has no sentence ending', () => {
   assert.equal(prepareSpeechText('第一段\n第二段。\nHello world\nNext!'),
-    '第一段。 第二段。 Hello world. Next!');
+    '第一段。\n第二段。\nHello world.\nNext!');
   assert.equal(escapeXml('Tom & Jerry <test> "ok"'),
     'Tom &amp; Jerry &lt;test&gt; &quot;ok&quot;');
 });

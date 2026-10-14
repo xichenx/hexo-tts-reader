@@ -42,19 +42,25 @@
 在浏览器中打开 [`preview.html`](./preview.html)，即可在浅色与深色模式下试用悬浮播放器
 UI——无需 Hexo 站点或 TTS 网络请求。
 
+对真实文章运行 `hexo reader:inspect _posts/example.md`，可查看最终朗读文本、
+音色与分段计划，不调用 TTS。运行 `hexo reader:preview _posts/example.md`
+则会合成最多 300 字的本地试听音频，输出路径位于
+`.hexo-reader-cache/previews/`；此命令需要构建机能访问 Edge TTS。
+
 ---
 
 ## 功能特性
 
 - **构建时合成** — 无需运行时 TTS 服务，无需 API 密钥
-- **内容哈希缓存** — 未变更的文章在多次构建之间不会重新合成
+- **整篇与分段缓存** — 只改一个段落时可复用其他段落的音频
 - **自动注入**到文章页面，或使用 `{% reader %}` 标签手动精确放置
 - **悬浮播放器**，支持播放 / 暂停 / 跳转 / 播放速度（0.75× – 2×）
-- **浅色与深色主题**，支持键盘操作
+- **浅色与深色主题**，支持多语言文案、键盘和屏幕阅读器
 - **智能文本提取** — 跳过代码块、脚本、样式和嵌入式媒体
 - **可定制朗读** — 按文章指定音色、语速、朗读稿及术语发音
 - **长文安全** — 在句子边界分块输入并拼接 MP3 帧
 - **单篇禁用** — 通过 front-matter 按文章关闭
+- **构建报告** — 汇总缓存命中、跳过、失败文章和分段复用情况
 
 ---
 
@@ -92,10 +98,9 @@ pnpm add hexo-tts-reader
    ```
 
 3. 运行 `hexo clean && hexo generate`（或 `hexo server`）。每篇文章页面右下角
-   会出现悬浮播放器按钮（默认标签：`朗读本文`）。可在配置中修改 `buttonLabel`
-   以适配你的语言环境。
+   会出现悬浮播放器按钮。文案会跟随站点语言，也可通过 `buttonLabel` 覆盖播放按钮。
 
-就这么简单。后续构建中，内容哈希缓存意味着只有变更过的文章会调用 TTS 服务。
+后续构建中，未变化的文章和段落都会复用缓存音频。
 
 ---
 
@@ -107,6 +112,8 @@ pnpm add hexo-tts-reader
 reader:
   enable: true
   autoInject: true
+  locale: auto                               # 跟随站点语言，支持 zh/en/ja/ko/es/fr/de/pt
+  cacheChunks: true                          # 复用未修改段落的音频
   voice: zh-CN-XiaoxiaoNeural
   autoVoice: article                         # article | true | false
   pronunciations:                            # 原文 -> 朗读时的说法
@@ -118,7 +125,7 @@ reader:
   cacheDir: .hexo-reader-cache               # local cache dir (gitignore it)
   pruneCache: false                          # 全量渲染后清理无引用音频
   position: bottom-right                     # bottom-right | bottom-left | top-right | top-left
-  buttonLabel: 朗读本文
+  buttonLabel: 朗读本文                         # 可选；默认随语言变化
   chunkSize: 4000                            # split long posts into <= N chars per request
   maxTextLength: 100000                      # hard upper bound per post
   failOnError: false                         # if true, build fails when TTS fails
@@ -132,6 +139,8 @@ reader:
 | --- | --- | --- | --- |
 | `enable` | boolean | `true` | 总开关。 |
 | `autoInject` | boolean | `true` | 自动在每篇文章末尾追加播放器。关闭后仅合成带有 `{% reader %}` 标签的文章。 |
+| `locale` | string | 站点语言 | 播放器文案；`auto` 跟随 Hexo 的 `language`，支持 zh/en/ja/ko/es/fr/de/pt。 |
+| `cacheChunks` | boolean | `true` | 将分段 MP3 缓存在 `<cacheDir>/chunks`，修改文章时复用未变更段落。 |
 | `voice` | string | `zh-CN-XiaoxiaoNeural` | 兜底音色；显式设置且未配置 `autoVoice` 时，全站使用该音色。 |
 | `autoVoice` | `article` / boolean | `article` | 默认按文章语言选一个音色；`true` 按文字片段切换；`false` 固定使用 `voice`。 |
 | `voices` | object | 内置映射 | 开启语言路由时，`zh`、`en`、`ja`、`ko`、`ru` 对应的音色 ID。 |
@@ -141,9 +150,9 @@ reader:
 | `outputFormat` | string | `audio-24khz-48kbitrate-mono-mp3` | `msedge-tts` 支持的任意格式。 |
 | `audioDir` | string | `audio` | 站点根目录下的公开 MP3 输出路径。拒绝路径穿越。 |
 | `cacheDir` | string | `.hexo-reader-cache` | 本地缓存目录（从站点 base 目录解析）。跨构建持久保存。 |
-| `pruneCache` | boolean | `false` | 仅在本轮已渲染全部文章时清理无引用的本地音频；增量构建不会清理。 |
+| `pruneCache` | boolean | `false` | 仅在本轮已渲染全部文章时清理无引用的整篇与分段音频；增量构建不会清理。 |
 | `position` | enum | `bottom-right` | 可选 `bottom-right`、`bottom-left`、`top-right`、`top-left`。 |
-| `buttonLabel` | string | `朗读本文` | 切换按钮的 aria-label / 工具提示。 |
+| `buttonLabel` | string | 随语言变化 | 播放按钮的 aria-label，可显式覆盖。 |
 | `chunkSize` | number | `4000` | 每次 TTS 请求的最大字符数，`200..8000`。 |
 | `maxTextLength` | number | `100000` | 单篇文章硬上限，`100..1000000`。更长文本会被截断。 |
 | `failOnError` | boolean | `false` | 为 `true` 时，TTS 失败会中止整个 `hexo generate`。 |
@@ -228,8 +237,9 @@ flowchart LR
 1. Hexo 渲染文章后（`after_post_render` 过滤器），插件优先使用自定义朗读稿；
    否则从 HTML 中提取纯文本，跳过代码块、脚本、样式和嵌入式媒体。
 2. 对没有句末标点的段落补停顿，再根据文本、音色设置与合成版本计算 SHA-1 缓存键。
-3. 若 `<cacheDir>/<key>.mp3` 已存在则复用；否则插件通过 [`msedge-tts`][msedge]
-   连接 Microsoft Edge TTS WebSocket，并以原子方式写入结果（`*.tmp` → rename）。
+3. 若 `<cacheDir>/<key>.mp3` 已存在则复用；否则先从 `<cacheDir>/chunks`
+   复用未变化段落，再通过 [`msedge-tts`][msedge] 合成缺失分段，并以原子方式写入
+   合并结果（`*.tmp` → rename）。
 4. 长文本在句子边界（中英文标点）分块，逐块合成，并作为原始 MP3 帧拼接——
    播放是安全的。
 5. 生成器在 `<audioDir>/<key>.mp3` 下输出 MP3，并在 `assets/hexo-reader/` 下
@@ -275,8 +285,10 @@ reader:
 ## 缓存
 
 - 缓存位于 `<site>/<cacheDir>`，跨构建持久保存。
+- 开启 `cacheChunks` 时，分段音频保存在 `<cacheDir>/chunks`，旧的整篇缓存仍可命中。
 - 键基于**内容**而非文件名，因此重命名不会触发重新合成，小幅编辑只会重新生成受影响的文章。
-- 增量构建会保留并输出未重新渲染文章所需的缓存音频；即使开启 `pruneCache`，也只在全量渲染时清理。
+- 增量构建会保留并输出未重新渲染文章所需的缓存音频；即使开启 `pruneCache`，
+  也只在全量渲染时清理整篇与分段缓存。
 - 修改全站音色或术语发音规则后，请运行 `hexo clean && hexo generate`，确保未改动的文章也重新渲染。
 - 若要强制全部重新合成，删除缓存目录即可。
 - 建议的 `.gitignore` 条目：
@@ -330,6 +342,11 @@ AnZhiYu、Butterfly 等开启 PJAX 的主题，从首页点进文章时不会执
 确保部署包含 `audio/` 与 `assets/hexo-reader/` 目录。若使用非默认 `audioDir`，
 请确认 CDN 规则未拦截。
 
+**合成时返回 403。**
+先确认已安装本插件 0.3.0 或更高版本（依赖 `msedge-tts` 2.1.0），并检查
+构建环境的系统时间及网络代理。上游 Edge Read Aloud 接口可能变化，插件无法保证
+所有网络环境都能连接。
+
 **希望发布站点时从不调用 TTS。**
 预先用已生成的 MP3 填充 `<cacheDir>`。插件会按内容哈希复用，无需联网。
 
@@ -338,8 +355,8 @@ AnZhiYu、Butterfly 等开启 PJAX 的主题，从首页点进文章时不会执
 ## 说明与限制
 
 - 合成在构建时进行，需要访问 Edge TTS 网络。
-- 需要 `msedge-tts` >= 2.0.5（随本插件捆绑）。Microsoft 在 2025 年底更改了
-  Edge Read Aloud API；旧客户端会收到 HTML 错误页而非音频。
+- 需要 `msedge-tts` 2.1.0（随本插件安装）。Microsoft 的 Edge Read Aloud
+  接口会变化；旧客户端可能返回错误页或 403，而不是音频。
 - 每篇文章对应一个 MP3；超长文章会分块并拼接。
 - 若某篇文章 TTS 失败且 `failOnError` 为 `false`（默认），该文章不会注入播放器，构建继续。
 - 缓存键为纯文本 + 合成参数的 SHA-1，仅作内容标识，不用于安全目的。

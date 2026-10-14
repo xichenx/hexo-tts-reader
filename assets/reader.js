@@ -11,6 +11,8 @@
     return m + ':' + (r < 10 ? '0' + r : r);
   }
 
+  var readerCount = 0;
+
   function initReader(root) {
     if (!root || root.__hexoReaderBound) {
       return;
@@ -20,49 +22,112 @@
     var audio = root.querySelector('.hexo-reader__audio');
     var panel = root.querySelector('.hexo-reader__panel');
     var playBtn = root.querySelector('.hexo-reader__play');
+    var launcher = root.querySelector('.hexo-reader__launcher');
     var header = root.querySelector('.hexo-reader__header');
     var collapseBtn = root.querySelector('.hexo-reader__collapse');
     var statusLabel = root.querySelector('.hexo-reader__status');
     var timeLabel = root.querySelector('.hexo-reader__time');
     var seek = root.querySelector('.hexo-reader__seek');
     var rateBtns = root.querySelectorAll('.hexo-reader__rate');
+    var rateToggle = root.querySelector('.hexo-reader__speed-toggle');
+    var rateMenu = root.querySelector('.hexo-reader__rates');
+    var rateValue = root.querySelector('.hexo-reader__rate-value');
+    var skipBtns = root.querySelectorAll('.hexo-reader__skip');
     var playLabel = root.getAttribute('data-label-play') || '播放';
     var pauseLabel = root.getAttribute('data-label-pause') || '暂停';
+    function label(name, fallback) {
+      return root.getAttribute('data-label-' + name) || fallback;
+    }
 
-    if (!audio || !panel || !playBtn) {
+    if (!audio || !panel || !playBtn || !launcher) {
       return;
+    }
+
+    readerCount += 1;
+    panel.id = 'hexo-reader-panel-' + readerCount;
+    launcher.setAttribute('aria-controls', panel.id);
+    rateMenu.id = 'hexo-reader-rates-' + readerCount;
+    rateToggle.setAttribute('aria-controls', rateMenu.id);
+
+    function fitPanel() {
+      if (!root.classList.contains('is-expanded') || root.hasAttribute('data-demo')) return;
+      // Measure the final layout, independent of the opening/closing transform.
+      var anchor = root.getBoundingClientRect();
+      var left = anchor.left + panel.offsetLeft;
+      var top = anchor.top + panel.offsetTop;
+      var rect = { left: left, top: top, right: left + panel.offsetWidth, bottom: top + panel.offsetHeight };
+      var dx = rect.left < 8 ? 8 - rect.left : Math.min(0, window.innerWidth - 8 - rect.right);
+      var dy = rect.top < 8 ? 8 - rect.top : Math.min(0, window.innerHeight - 8 - rect.bottom);
+      panel.style.setProperty('--hr-shift-x', dx + 'px');
+      panel.style.setProperty('--hr-shift-y', dy + 'px');
+    }
+
+    function closeRates() {
+      rateMenu.hidden = true;
+      rateToggle.setAttribute('aria-expanded', 'false');
     }
 
     function setExpanded(expanded) {
       root.classList.toggle('is-expanded', !!expanded);
+      launcher.setAttribute('aria-expanded', String(!!expanded));
+      launcher.toggleAttribute('inert', !!expanded);
+      launcher.setAttribute('aria-hidden', String(!!expanded));
+      panel.toggleAttribute('inert', !expanded);
+      panel.setAttribute('aria-hidden', String(!expanded));
+      if (expanded) fitPanel();
+      else closeRates();
     }
 
     function setPlayingIcon(playing) {
       playBtn.classList.toggle('is-playing', !!playing);
+      root.classList.toggle('is-playing', !!playing);
       playBtn.setAttribute('aria-label', playing ? pauseLabel : playLabel);
       if (statusLabel && !root.classList.contains('is-error')) {
-        statusLabel.textContent = playing ? '正在朗读' : '已暂停';
+        statusLabel.textContent = playing ? label('playing', '正在朗读') : label('paused', '已暂停');
       }
     }
 
-    playBtn.addEventListener('focus', function () {
-      if (!root.__hexoReaderClosing) {
-        setExpanded(true);
+    launcher.addEventListener('click', function (e) {
+      if (root.__hexoReaderDragged) {
+        root.__hexoReaderDragged = false;
+        e.preventDefault();
+        return;
+      }
+      var opening = !root.classList.contains('is-expanded');
+      setExpanded(opening);
+      if (opening) playBtn.focus({ preventScroll: true });
+    });
+    root.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      if (!rateMenu.hidden) {
+        closeRates();
+        rateToggle.focus({ preventScroll: true });
+      } else if (root.classList.contains('is-expanded')) {
+        setExpanded(false);
+        launcher.focus({ preventScroll: true });
+      }
+    });
+    document.addEventListener('pointerdown', function (e) {
+      if (!root.contains(e.target)) {
+        closeRates();
+        if (!root.hasAttribute('data-demo')) setExpanded(false);
+      } else if (!root.querySelector('.hexo-reader__speed-picker').contains(e.target)) {
+        closeRates();
       }
     });
     root.addEventListener('focusout', function (e) {
-      if (!e.relatedTarget || !root.contains(e.relatedTarget)) {
-        setExpanded(false);
-      }
+      if (!root.contains(e.relatedTarget)) closeRates();
     });
-    if (collapseBtn) {
-      collapseBtn.addEventListener('click', function () {
-        setExpanded(false);
-        root.classList.add('is-hover-suppressed');
-        root.__hexoReaderClosing = true;
-        playBtn.focus({ preventScroll: true });
-        root.__hexoReaderClosing = false;
-      });
+    collapseBtn.addEventListener('click', function () {
+      setExpanded(false);
+      launcher.focus({ preventScroll: true });
+    });
+
+    function setTime(current, duration) {
+      if (!timeLabel) return;
+      timeLabel.querySelector('.hexo-reader__elapsed').textContent = formatTime(current);
+      timeLabel.querySelector('.hexo-reader__duration').textContent = formatTime(duration);
     }
 
     function updateSeekFill() {
@@ -72,6 +137,7 @@
       var max = Number(seek.max) || 1000;
       var pct = max > 0 ? (Number(seek.value) / max) * 100 : 0;
       seek.style.setProperty('--hr-progress', pct + '%');
+      root.style.setProperty('--hr-progress', pct + '%');
     }
 
     playBtn.addEventListener('click', function (e) {
@@ -83,12 +149,22 @@
       if (audio.paused) {
         audio.play().catch(function () {
           root.classList.add('is-error');
-          if (statusLabel) { statusLabel.textContent = '播放失败'; }
+          setPlayingIcon(false);
+          if (statusLabel) { statusLabel.textContent = label('failed', '播放失败'); }
         });
       } else {
         audio.pause();
       }
     });
+
+    for (var skipIndex = 0; skipIndex < skipBtns.length; skipIndex++) {
+      skipBtns[skipIndex].addEventListener('click', function () {
+        var amount = Number(this.getAttribute('data-skip'));
+        if (!isFinite(amount)) return;
+        var end = isFinite(audio.duration) ? audio.duration : Infinity;
+        audio.currentTime = Math.max(0, Math.min(end, audio.currentTime + amount));
+      });
+    }
 
     audio.addEventListener('play', function () {
       root.classList.remove('is-error');
@@ -97,23 +173,18 @@
       for (var i = 0; i < others.length; i++) {
         if (others[i] !== audio && !others[i].paused) { others[i].pause(); }
       }
-      // Pointer (mouse/pen) devices rely purely on hover to expand/collapse, so
-      // playback must not pin the panel open. Touch has no hover, so a tap-play
-      // expands the controls there.
-      if (root.__hexoReaderPointerType === 'touch') {
-        setExpanded(true);
-      }
     });
     audio.addEventListener('pause', function () { setPlayingIcon(false); });
     audio.addEventListener('ended', function () {
       setPlayingIcon(false);
-      if (statusLabel) { statusLabel.textContent = '播放完成'; }
+      if (statusLabel) { statusLabel.textContent = label('ended', '播放完成'); }
     });
 
     audio.addEventListener('timeupdate', function () {
       if (timeLabel) {
-        timeLabel.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+        setTime(audio.currentTime, audio.duration);
       }
+      if (seek) seek.setAttribute('aria-valuetext', formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration));
       if (seek && isFinite(audio.duration) && audio.duration > 0) {
         var v = Math.round((audio.currentTime / audio.duration) * 1000);
         if (!seek.__seeking) {
@@ -125,17 +196,15 @@
 
     audio.addEventListener('loadedmetadata', function () {
       if (timeLabel) {
-        timeLabel.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+        setTime(audio.currentTime, audio.duration);
       }
     });
 
     audio.addEventListener('error', function () {
       root.classList.add('is-error');
       setPlayingIcon(false);
-      if (statusLabel) { statusLabel.textContent = '音频加载失败'; }
-      if (timeLabel) {
-        timeLabel.textContent = '加载失败';
-      }
+      if (statusLabel) { statusLabel.textContent = label('load-failed', '音频加载失败'); }
+
     });
 
     if (seek) {
@@ -152,41 +221,43 @@
         updateSeekFill();
         if (isFinite(audio.duration) && audio.duration > 0 && timeLabel) {
           var t = (Number(seek.value) / 1000) * audio.duration;
-          timeLabel.textContent = formatTime(t) + ' / ' + formatTime(audio.duration);
+          setTime(t, audio.duration);
         }
       });
       updateSeekFill();
     }
 
-    if (rateBtns && rateBtns.length) {
-      var rateKey = 'hexo-reader-rate';
-      var setRate = function (btn) {
-        var v = parseFloat(btn.getAttribute('data-rate'));
-        if (isFinite(v) && v > 0) {
-          audio.playbackRate = v;
-          try { window.localStorage.setItem(rateKey, String(v)); } catch (e) {}
-        }
-        for (var j = 0; j < rateBtns.length; j++) {
-          rateBtns[j].setAttribute('aria-pressed', rateBtns[j] === btn ? 'true' : 'false');
-        }
-      };
-      for (var k = 0; k < rateBtns.length; k++) {
-        (function (btn) {
-          btn.addEventListener('click', function () { setRate(btn); });
-        })(rateBtns[k]);
+    var rateKey = 'hexo-reader-rate';
+    function setRate(value) {
+      var selected = null;
+      for (var i = 0; i < rateBtns.length; i++) {
+        if (rateBtns[i].getAttribute('data-rate') === String(value)) selected = rateBtns[i];
       }
-      try {
-        var storedRate = window.localStorage.getItem(rateKey);
-        for (var n = 0; n < rateBtns.length; n++) {
-          if (rateBtns[n].getAttribute('data-rate') === storedRate) {
-            setRate(rateBtns[n]);
-            break;
-          }
-        }
-      } catch (e) {}
+      if (!selected) return;
+      audio.playbackRate = Number(value);
+      rateValue.textContent = value + '×';
+      for (var j = 0; j < rateBtns.length; j++) {
+        rateBtns[j].setAttribute('aria-pressed', String(rateBtns[j] === selected));
+      }
+      try { window.localStorage.setItem(rateKey, String(value)); } catch (e) {}
     }
-
-    setupDrag(root, playBtn, header);
+    rateToggle.addEventListener('click', function () {
+      var opening = rateMenu.hidden;
+      rateMenu.hidden = !opening;
+      rateToggle.setAttribute('aria-expanded', String(opening));
+      if (opening) rateMenu.querySelector('[aria-pressed="true"]').focus({ preventScroll: true });
+    });
+    for (var k = 0; k < rateBtns.length; k++) {
+      rateBtns[k].addEventListener('click', function () {
+        setRate(this.getAttribute('data-rate'));
+        closeRates();
+        rateToggle.focus({ preventScroll: true });
+      });
+    }
+    try { setRate(window.localStorage.getItem(rateKey) || '1'); } catch (e) {}
+    setExpanded(root.classList.contains('is-expanded'));
+    if (!root.hasAttribute('data-demo')) setupDrag(root, launcher, header, fitPanel);
+    window.addEventListener('resize', fitPanel);
   }
 
   var POS_KEY = 'hexo-reader-pos';
@@ -224,20 +295,7 @@
     } catch (e) {}
   }
 
-  function setupDrag(root, playBtn, header) {
-    var audio = root.querySelector('.hexo-reader__audio');
-    var body = root.querySelector('.hexo-reader__body');
-
-    root.addEventListener('pointerleave', function (e) {
-      root.classList.remove('is-hover-suppressed');
-      // On pointer (mouse/pen) devices, leaving the player collapses it back to
-      // the FAB even while audio keeps playing. Touch has no hover, so a tapped
-      // play stays expanded until the collapse button is used.
-      if (e.pointerType !== 'touch') {
-        root.classList.remove('is-expanded');
-      }
-    });
-
+  function setupDrag(root, playBtn, header, fitPanel) {
     function clearAnchorClasses() {
       root.classList.remove(
         'is-floating', 'is-grow-left', 'is-grow-right', 'is-pin-top', 'is-pin-bottom'
@@ -278,7 +336,8 @@
     /* Derive a corner-anchored position from the FAB's current viewport rect,
      * clamped to stay fully on screen. */
     function commitFromFab() {
-      var fab = playBtn.getBoundingClientRect();
+      // The launcher scales during transitions; the root retains its anchor size.
+      var fab = root.getBoundingClientRect();
       var vw = window.innerWidth;
       var vh = window.innerHeight;
       var maxLeft = Math.max(EDGE_MARGIN, vw - fab.width - EDGE_MARGIN);
@@ -335,7 +394,7 @@
         var startLeft = 0;
         var startTop = 0;
         var moved = false;
-        var wasExpanded = !!(body && window.getComputedStyle(body).display !== 'none');
+        var wasExpanded = root.classList.contains('is-expanded');
         root.__hexoReaderDragged = false;
 
         function moveTo(left, top) {
@@ -347,6 +406,7 @@
           root.style.top = clamp(top, EDGE_MARGIN, maxTop) + 'px';
           root.style.right = 'auto';
           root.style.bottom = 'auto';
+          fitPanel();
         }
 
         function onMove(ev) {
@@ -390,12 +450,9 @@
           if (moved) {
             root.classList.remove('is-dragging');
             root.classList.remove('is-drag-expanded');
-            root.__hexoReaderDragged = true;
+            root.__hexoReaderDragged = handle === playBtn;
             commitFromFab();
-            root.classList.add('is-hover-suppressed');
-            if (audio && audio.paused) {
-              root.classList.remove('is-expanded');
-            }
+            fitPanel();
           }
         }
 
@@ -409,6 +466,7 @@
         clearStoredPos();
         clearPos();
         root.__hexoReaderDragged = false;
+        fitPanel();
       });
     }
 
