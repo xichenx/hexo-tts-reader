@@ -47,7 +47,20 @@ parágrafos inalterados é reutilizado e o resultado da geração é resumido.
 
 ## Pré-visualização
 
+[![Demonstração de leitura de um artigo](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[Assistir à demonstração de 34 segundos com áudio](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+Inclui narração real em chinês, ajuste de velocidade e reprodução com o player recolhido. Clique na animação para assistir ao vídeo com som.
+
+Experimente a [demo interativa do artigo localmente](./docs/demo/README.md).
+
+<details>
+<summary>Capturas do player claro e escuro</summary>
+
 ![Prévia do player: temas claro e escuro e botão de fones recolhido](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 Abra [`preview.html`](./preview.html) no navegador para experimentar a interface do
 player flutuante em modo claro e escuro — sem site Hexo ou chamada de rede TTS.

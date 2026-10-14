@@ -46,7 +46,20 @@ Absatz-Audios, lokalisierte Player-Steuerung und ein Build-Bericht.
 
 ## Vorschau
 
+[![Vorlesen auf einer Artikelseite](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[34-Sekunden-Demo mit Ton ansehen](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+Mit chinesischer Sprachausgabe, Geschwindigkeitswechsel und Wiedergabe bei eingeklapptem Player. Animation anklicken, um das Video mit Ton anzusehen.
+
+Die [interaktive Artikeldemo lokal ausprobieren](./docs/demo/README.md).
+
+<details>
+<summary>Player-Screenshots im hellen und dunklen Design</summary>
+
 ![Player-Vorschau: helles und dunkles Design sowie eingeklappte Kopfhörertaste](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 Öffnen Sie [`preview.html`](./preview.html) in Ihrem Browser, um die schwebende Player-Oberfläche
 im Hell- und Dunkelmodus auszuprobieren — ohne Hexo-Site oder TTS-Netzwerkaufruf.

@@ -40,7 +40,20 @@ read-aloud without operating a backend or paying for a speech API at runtime.
 
 ## Preview
 
+[![Article playback demo](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[Watch the 34-second demo with audio](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+Includes real Chinese narration, speed adjustment, and continued playback while collapsed. Click the animation to watch the video with sound.
+
+Try the [interactive article demo locally](./docs/demo/README.md).
+
+<details>
+<summary>Light and dark player screenshots</summary>
+
 ![Player UI preview: light theme, dark theme, and collapsed headphone button](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 Open [`preview.html`](./preview.html) in your browser to try the floating player
 UI in light and dark mode — no Hexo site or TTS network call required.

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hexo TTS Reader 文章朗读交互演示，含真实中文朗读音频。">
+  <title>把阅读，留一点给耳朵 · Hexo TTS Reader 演示</title>
+  <link rel="stylesheet" href="../../assets/reader.css">
+  <style>
+    :root { color-scheme: light; --hexo-reader-accent: #7164c4; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #faf9f7; color: #303037; font: 15px/1.9 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+    .site-header { max-width: 1080px; margin: auto; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e9e6e2; }
+    .brand { font-size: 17px; font-weight: 650; letter-spacing: 2px; }
+    .brand small { color: #99949e; font-size: 10px; letter-spacing: 2px; margin-left: 14px; font-weight: 500; }
+    .demo-label { color: #8a848e; font-size: 12px; }
+    main { max-width: 760px; margin: 42px auto 100px; padding: 0 32px; }
+    .eyebrow { color: #8f7eb4; font-size: 11px; font-weight: 600; letter-spacing: 2px; }
+    h1 { font-size: clamp(27px, 3vw, 36px); letter-spacing: -.8px; line-height: 1.5; font-weight: 650; margin: 12px 0; }
+    .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; color: #928d96; font-size: 12px; }
+    #listen { border: 0; border-radius: 20px; background: #eeebf6; color: #7762a9; font: inherit; padding: 5px 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; margin-left: 6px; }
+    #listen:hover { background: #e6e0f2; }
+    #listen:focus-visible { outline: 2px solid #7164c4; outline-offset: 3px; }
+    .intro { color: #8a818f; border-left: 2px solid #c8bddb; padding: 4px 0 4px 18px; margin: 28px 0; font-size: 14px; }
+    article p { line-height: 2.05; margin: 16px 0; color: #5c5760; }
+    h2 { font-size: 20px; font-weight: 600; margin: 30px 0 12px; }
+    .article-end { font-size: 11px; color: #aba4ad; letter-spacing: 1px; margin-top: 30px; }
+    .hexo-reader[data-position="bottom-right"] { right: 34px; bottom: 30px; }
+    @media (max-width: 600px) { .site-header { padding: 16px 22px; } .brand small { display: none; } main { padding: 0 24px; margin-top: 30px; } .hexo-reader[data-position="bottom-right"] { right: 18px; bottom: 20px; } }
+  </style>
+</head>
+<body>
+  <header class="site-header"><div class="brand">慢读笔记 <small>SLOW NOTES</small></div><span class="demo-label">Hexo TTS Reader · 示例博客</span></header>
+  <main>
+    <div class="eyebrow">随笔 / READING</div>
+    <h1>把阅读，留一点给耳朵</h1>
+    <div class="meta"><span>2026 年 10 月 14 日</span><span>·</span><span>约 2 分钟阅读</span><button id="listen" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="12" width="4" height="8" rx="2"/><rect x="17" y="12" width="4" height="8" rx="2"/></svg>听这篇文章</button></div>
+    <div class="intro">给眼睛片刻休息，让文字在耳边继续。</div>
+    <article>
+      <p>我们总想为喜欢的文字，多留一点时间。有时是在通勤的路上，有时是整理房间的午后，也可能只是想暂时离开屏幕，让眼睛休息一会儿。</p>
+      <p>阅读不必总是盯着一块屏幕。点击右下角的耳机，就能让眼前这篇文章，变成一段可以听的声音。文字还留在原来的地方，思绪却可以跟着声音，慢慢往前走。</p>
+      <h2>按照自己的节奏听</h2>
+      <p>遇到喜欢的句子，可以后退十秒，再听一次。想让叙述更轻快，也可以把播放速度调到一点二五倍。进度、暂停和语速，都放在这张小小的卡片里。</p>
+      <h2>把空间还给文字</h2>
+      <p>收起播放器后，朗读仍会继续。页面只留下一个安静的耳机按钮，不挡住文章，也不打断思考。需要的时候，再轻轻点开它。</p>
+      <p>好的工具，应该让我们更靠近内容。希望这一个小小的播放器，能给你的博客，也给每一位读者，多一种享受文字的方式。</p>
+    </article>
+    <div class="article-end">— HEXO TTS READER · 真实播放器交互演示 —</div>
+  </main>
+  <div class="hexo-reader" data-reader-theme="light" lang="zh" data-position="bottom-right" data-audio="./article.mp3" data-title="把阅读，留一点给耳朵" data-label-play="朗读本文" data-label-pause="暂停朗读" data-label-ready="准备播放" data-label-playing="正在朗读" data-label-paused="已暂停" data-label-ended="播放完成" data-label-failed="播放失败" data-label-load-failed="音频加载失败">
+  <button type="button" class="hexo-reader__launcher" aria-label="文章朗读播放器" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="12" width="4" height="8" rx="2"/><rect x="17" y="12" width="4" height="8" rx="2"/></svg><span class="hexo-reader__activity" aria-hidden="true"></span></button>
+  <div class="hexo-reader__panel" role="group" aria-label="文章朗读播放器">
+    <div class="hexo-reader__body">
+      <div class="hexo-reader__header">
+        <span class="hexo-reader__heading">
+          <span class="hexo-reader__status" aria-live="polite">准备播放</span>
+          <span class="hexo-reader__title" title="把阅读，留一点给耳朵">把阅读，留一点给耳朵</span>
+        </span>
+        <button type="button" class="hexo-reader__collapse" aria-label="收起播放器" title="收起播放器"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m5 8 5 5 5-5"/></svg></button>
+      </div>
+      <div class="hexo-reader__progress">
+        <input type="range" class="hexo-reader__seek" min="0" max="1000" value="0" step="1" aria-label="播放进度" />
+        <span class="hexo-reader__time" aria-live="off"><span class="hexo-reader__elapsed">0:00</span><span class="hexo-reader__duration">0:00</span></span>
+      </div>
+      <div class="hexo-reader__controls">
+        <div class="hexo-reader__transport">
+          <button type="button" class="hexo-reader__skip" data-skip="-10" aria-label="快退 10 秒" title="快退 10 秒"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g><path d="M5 7a8 8 0 1 1-1 9M5 3v4h4"/></g><text x="12" y="15" fill="currentColor" stroke="none" text-anchor="middle" font-size="8" font-weight="600" font-family="sans-serif">10</text></svg></button>
+          <button type="button" class="hexo-reader__play" aria-label="朗读本文" aria-keyshortcuts="Space Enter">
+            <svg class="hexo-reader__icon-play" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.8a.8.8 0 0 1 1.2-.7l9.5 6.2a.8.8 0 0 1 0 1.4l-9.5 6.2a.8.8 0 0 1-1.2-.7Z"/></svg>
+            <svg class="hexo-reader__icon-pause" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14" rx="1" fill="currentColor"/><rect x="13.5" y="5" width="3.5" height="14" rx="1" fill="currentColor"/></svg>
+          </button>
+          <button type="button" class="hexo-reader__skip" data-skip="10" aria-label="快进 10 秒" title="快进 10 秒"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="translate(24 0) scale(-1 1)"><path d="M5 7a8 8 0 1 1-1 9M5 3v4h4"/></g><text x="12" y="15" fill="currentColor" stroke="none" text-anchor="middle" font-size="8" font-weight="600" font-family="sans-serif">10</text></svg></button>
+        </div>
+        <div class="hexo-reader__speed-picker">
+          <button type="button" class="hexo-reader__speed-toggle" aria-label="播放速度" aria-expanded="false"><span class="hexo-reader__rate-value">1×</span><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m5 6 3 3 3-3"/></svg></button>
+          <div class="hexo-reader__rates" role="group" aria-label="播放速度" hidden>
+            <span class="hexo-reader__speed-label">播放速度</span>
+            <div class="hexo-reader__rate-options"><button type="button" class="hexo-reader__rate" data-rate="0.75" aria-pressed="false">0.75×</button><button type="button" class="hexo-reader__rate" data-rate="1" aria-pressed="true">1×</button><button type="button" class="hexo-reader__rate" data-rate="1.25" aria-pressed="false">1.25×</button><button type="button" class="hexo-reader__rate" data-rate="1.5" aria-pressed="false">1.5×</button><button type="button" class="hexo-reader__rate" data-rate="2" aria-pressed="false">2×</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <audio class="hexo-reader__audio" preload="metadata" src="./article.mp3"></audio>
+  </div>
+</div>
+  <script src="../../assets/reader.js"></script>
+  <script>
+    document.getElementById('listen').addEventListener('click', function () {
+      var reader = document.querySelector('.hexo-reader');
+      if (!reader.classList.contains('is-expanded')) reader.querySelector('.hexo-reader__launcher').click();
+      if (reader.querySelector('audio').paused) reader.querySelector('.hexo-reader__play').click();
+    });
+  </script>
+</body>
+</html>

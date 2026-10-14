@@ -46,7 +46,20 @@ API キー、クライアント側 JavaScript による合成は不要です。�
 
 ## プレビュー
 
+[![記事ページでの読み上げデモ](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[音声付きの34秒デモを見る](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+中国語の実際の読み上げ、速度変更、折りたたみ後の再生継続を紹介します。アニメーションをクリックすると音声付き動画を視聴できます。
+
+[記事の操作デモをローカルで試す](./docs/demo/README.md)。
+
+<details>
+<summary>ライト・ダークテーマのスクリーンショット</summary>
+
 ![プレーヤーのプレビュー：ライトテーマ、ダークテーマ、折りたたみ時のヘッドホンボタン](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 ブラウザで [`preview.html`](./preview.html) を開くと、Hexo サイトや TTS の
 ネットワーク呼び出しなしで、ライト／ダークモードのフローティングプレーヤー UI を

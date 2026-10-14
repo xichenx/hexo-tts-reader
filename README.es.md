@@ -46,7 +46,20 @@ reutiliza el audio de párrafos sin cambios y se muestran informes de compilaci�
 
 ## Vista previa
 
+[![Demostración de lectura de un artículo](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[Ver la demostración de 34 segundos con audio](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+Incluye narración real en chino, ajuste de velocidad y reproducción con el reproductor contraído. Haz clic en la animación para ver el video con sonido.
+
+Prueba la [demo interactiva del artículo en local](./docs/demo/README.md).
+
+<details>
+<summary>Capturas del reproductor claro y oscuro</summary>
+
 ![Vista previa del reproductor: temas claro y oscuro y botón de auriculares contraído](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 Abre [`preview.html`](./preview.html) en tu navegador para probar la interfaz del reproductor
 flotante en modo claro y oscuro — sin necesidad de un sitio Hexo ni de una llamada de red TTS.

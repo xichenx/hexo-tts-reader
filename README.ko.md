@@ -46,7 +46,20 @@
 
 ## 미리보기
 
+[![글 페이지 읽기 데모](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[소리가 포함된 34초 데모 보기](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+실제 중국어 낭독, 배속 조절, 플레이어를 접은 후에도 계속되는 재생을 보여줍니다. 애니메이션을 클릭하면 소리가 포함된 영상을 볼 수 있습니다.
+
+[글 페이지의 대화형 데모를 로컬에서 실행](./docs/demo/README.md)할 수 있습니다.
+
+<details>
+<summary>밝은 테마와 어두운 테마 스크린샷</summary>
+
 ![플레이어 미리보기: 밝은 테마, 어두운 테마, 접힌 헤드폰 버튼](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 브라우저에서 [`preview.html`](./preview.html)을 열면 Hexo 사이트나 TTS
 네트워크 호출 없이 라이트/다크 모드의 플로팅 플레이어 UI를

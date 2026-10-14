@@ -46,7 +46,20 @@ paragraphes inchangés réutilisent leur audio et un bilan apparaît après la g
 
 ## Aperçu
 
+[![Démonstration de lecture d’un article](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[Voir la démonstration de 34 secondes avec le son](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+Narration réelle en chinois, réglage de la vitesse et lecture continue avec le lecteur replié. Cliquez sur l’animation pour voir la vidéo avec le son.
+
+Essayez la [démonstration interactive de l’article en local](./docs/demo/README.md).
+
+<details>
+<summary>Captures du lecteur clair et sombre</summary>
+
 ![Aperçu du lecteur : thèmes clair et sombre et bouton casque replié](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 Ouvrez [`preview.html`](./preview.html) dans votre navigateur pour essayer l'interface du lecteur
 flottant en mode clair et sombre — sans site Hexo ni appel réseau TTS requis.

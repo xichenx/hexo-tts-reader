@@ -39,7 +39,20 @@
 
 ## 预览
 
+[![文章页朗读演示](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/article-demo.gif)](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)
+
+**[观看 34 秒有声演示](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/demo/player-demo.mp4)**
+
+展示真实中文朗读、倍速调节，以及收起播放器后继续播放。点击动图观看有声视频。
+
+也可以在本地打开[可交互的文章演示页](./docs/demo/README.md)。
+
+<details>
+<summary>浅色与深色播放器截图</summary>
+
 ![播放器 UI 预览：浅色主题、深色主题与收起后的耳机按钮](https://raw.githubusercontent.com/xichenx/hexo-tts-reader/main/docs/images/player-preview.jpg)
+
+</details>
 
 在浏览器中打开 [`preview.html`](./preview.html)，即可在浅色与深色模式下试用悬浮播放器
 UI——无需 Hexo 站点或 TTS 网络请求。
