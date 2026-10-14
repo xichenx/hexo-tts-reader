@@ -27,7 +27,7 @@ El navegador solo carga un archivo `<audio>` estático: sin servidor TTS en tiem
 sin clave API, sin síntesis JavaScript en el cliente. Ideal para blogs que quieren
 lectura en voz alta sin operar un backend ni pagar por una API de voz en tiempo de ejecución.
 
-Nuevo en 0.3.0: inspecciona la narración con `hexo reader:inspect _posts/ejemplo.md`
+Nuevo en 0.2.0: inspecciona la narración con `hexo reader:inspect _posts/ejemplo.md`
 o escucha una muestra con `hexo reader:preview _posts/ejemplo.md`. También se
 reutiliza el audio de párrafos sin cambios y se muestran informes de compilación.
 

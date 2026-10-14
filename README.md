@@ -390,7 +390,7 @@ directories. If you set a non-default `audioDir`, ensure it's not blocked by
 your CDN rules.
 
 **Synthesis returns HTTP 403.**
-Use plugin 0.3.0 or later (which installs `msedge-tts` 2.1.0), and check the
+Use plugin 0.2.0 or later (which installs `msedge-tts` 2.1.0), and check the
 build host's clock and proxy. The upstream Edge Read Aloud endpoint can change;
 connectivity is not guaranteed in every network environment.
 

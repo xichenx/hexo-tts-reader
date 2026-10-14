@@ -27,7 +27,7 @@
 API キー、クライアント側 JavaScript による合成は不要です。バックエンドを運用したり、
 実行時に音声 API の料金を支払ったりせずに読み上げ機能を追加したいブログに最適です。
 
-0.3.0 では `hexo reader:inspect _posts/example.md` で読み上げ内容を確認し、
+0.2.0 では `hexo reader:inspect _posts/example.md` で読み上げ内容を確認し、
 `hexo reader:preview _posts/example.md` で短い音声を試聴できます。変更していない段落の
 音声を再利用し、ビルド結果も表示します。プレーヤーの表示はサイト言語に対応します。
 

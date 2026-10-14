@@ -27,7 +27,7 @@ Der Browser lädt nur eine statische `<audio>`-Datei — kein TTS-Server zur Lau
 kein API-Schlüssel, keine clientseitige JavaScript-Synthese. Ideal für Blogs, die
 Vorlesefunktion wünschen, ohne ein Backend zu betreiben oder zur Laufzeit für eine Sprach-API zu zahlen.
 
-Neu in 0.3.0: Vorschau mit `hexo reader:inspect _posts/beispiel.md` oder
+Neu in 0.2.0: Vorschau mit `hexo reader:inspect _posts/beispiel.md` oder
 `hexo reader:preview _posts/beispiel.md`, Wiederverwendung unveränderter
 Absatz-Audios, lokalisierte Player-Steuerung und ein Build-Bericht.
 

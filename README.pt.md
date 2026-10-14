@@ -28,7 +28,7 @@ de execução, sem chave de API, sem síntese JavaScript no cliente. Ideal para 
 que querem leitura em voz alta sem operar um backend ou pagar por uma API de voz
 em tempo de execução.
 
-Novo na versão 0.3.0: inspecione a narração com `hexo reader:inspect _posts/exemplo.md`
+Novo na versão 0.2.0: inspecione a narração com `hexo reader:inspect _posts/exemplo.md`
 ou ouça uma amostra com `hexo reader:preview _posts/exemplo.md`. O áudio de
 parágrafos inalterados é reutilizado e o resultado da geração é resumido.
 

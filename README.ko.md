@@ -27,7 +27,7 @@
 클라이언트 측 JavaScript 합성이 필요 없습니다. 백엔드를 운영하거나
 실행 시점에 음성 API 비용을 지불하지 않고도 낭독 기능을 원하는 블로그에 적합합니다.
 
-0.3.0에서는 `hexo reader:inspect _posts/example.md`로 낭독 내용을 확인하고
+0.2.0에서는 `hexo reader:inspect _posts/example.md`로 낭독 내용을 확인하고
 `hexo reader:preview _posts/example.md`로 짧은 음성을 미리 들을 수 있습니다.
 변경되지 않은 문단의 오디오를 재사용하며 빌드 결과와 현지화된 플레이어를 제공합니다.
 

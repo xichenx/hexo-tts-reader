@@ -27,7 +27,7 @@ Le navigateur ne charge qu'un fichier `<audio>` statique — pas de serveur TTS 
 pas de clé API, pas de synthèse JavaScript côté client. Idéal pour les blogs qui souhaitent
 la lecture à voix haute sans exploiter de backend ni payer une API vocale à l'exécution.
 
-Nouveau en 0.3.0 : inspectez le texte lu avec `hexo reader:inspect _posts/exemple.md`
+Nouveau en 0.2.0 : inspectez le texte lu avec `hexo reader:inspect _posts/exemple.md`
 ou écoutez un extrait avec `hexo reader:preview _posts/exemple.md`. Les
 paragraphes inchangés réutilisent leur audio et un bilan apparaît après la génération.
 
