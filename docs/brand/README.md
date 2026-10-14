@@ -1,8 +1,9 @@
 # Project identity
 
-The **voice bookmark** combines an article bookmark with three audio waveform
-bars. Warm orange (`#F16B45`) and cream (`#FFF8ED`) keep the mark legible at
-small sizes and on both light and dark backgrounds.
+The **speaking blog** combines a browser window, article text lines, and a
+speaking symbol. It represents **blog text converted to speech (TTS)**.
+Warm orange (`#F16B45`) and cream (`#FFF8ED`) keep the mark legible at small
+sizes and on both light and dark backgrounds.
 
 ## Assets
 
@@ -26,10 +27,12 @@ committing the image file. See [GitHub's instructions](https://docs.github.com/e
 
 ## Design source
 
-Concept exploration used the built-in **imagegen** tool. The selected direction
-was then implemented as clean SVG geometry; the PNG assets are browser-rendered
-exports of that SVG, with no generated texture or edge artifacts.
+Initial concept exploration used the built-in **imagegen** tool. The current
+design refines the existing SVG to emphasize blog text-to-speech: a browser
+window holds an article, and a speaker overlaps its lower-right corner. PNG
+assets are browser-rendered exports of the flat-color SVG.
 
-Final concept prompt:
+Earlier color and shape exploration prompt (the bookmark has since been
+replaced by the speaking blog symbol):
 
 > Use case: logo-brand. Design a new finished icon for hexo-tts-reader, an open-source blog article text-to-speech reader. A completely new visual direction: bold warm orange app icon, simple editorial-tech identity. One centered rounded square tile, warm vermilion orange #F16B45, generous rounded corners (about 23% radius), with ONE cream/off-white #FFF8ED bookmark silhouette in the center. The bookmark is a thick vertical rounded-top ribbon with a small clean V-shaped notch at the bottom. Three chunky vertical orange pill cutouts inside the upper-middle of the bookmark form an audio waveform (short, tall, medium), with generous gaps. The bookmark should be wider than usual and occupy about 46% of tile width, 62% height so the waveform remains clear at 24px. This symbolizes saved written articles becoming audio. Make it a polished, extremely simple modern software app icon, memorable and compact. STRICTLY FLAT solid fills, two colors only, absolutely NO gradient, no noise, no fabric, no shadows, no 3D, no thin outlines, no letters or text, no watermark, no open book, no headphones, no external decorations. Transparent outside rounded square, uniform opaque tile inside. Center tile with only 8% outer transparent margin. Exact clean symmetrical geometry and smooth crisp edges. Single icon, not a sheet of alternatives.
