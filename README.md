@@ -425,6 +425,10 @@ npm test
 
 Tests use the built-in Node test runner (`node --test`).
 
+Maintainers: run `npm run release:setup` once to configure npm trusted publishing.
+GitHub Actions then publishes without a long-lived `NPM_TOKEN`. See the
+[publishing guide](./docs/PUBLISHING.md).
+
 ---
 
 ## Related links

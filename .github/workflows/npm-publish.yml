@@ -1,51 +1,77 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-
 name: Node.js Package
 
 on:
   release:
-    types: [created]
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing stable release tag to publish (e.g. v0.2.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm test
-
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Validate the published release
+        id: release
+        uses: actions/github-script@v7
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        with:
+          script: |
+            const tag = process.env.RELEASE_TAG;
+            if (!/^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(tag)) {
+              throw new Error('Expected a stable release tag such as v0.2.0.');
+            }
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              ...context.repo, tag,
+            });
+            if (release.draft || release.prerelease) {
+              throw new Error('Publish a stable GitHub Release before publishing to npm.');
+            }
+            core.setOutput('tag', tag);
+            core.setOutput('version', tag.slice(1));
+
       - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ steps.release.outputs.tag }}
+          persist-credentials: false
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24'
           registry-url: https://registry.npmjs.org/
 
-      - name: Sync package.json version with release tag
+      - name: Ensure an OIDC-capable npm CLI
+        run: npm install --global npm@11
+
+      - name: Verify package version matches the release
         env:
-          TAG_NAME: ${{ github.event.release.tag_name }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
-          set -euo pipefail
-          VERSION="${TAG_NAME#v}"
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.+-]+)?(\+[0-9A-Za-z.+-]+)?$ ]]; then
-            echo "::error::Release tag '$TAG_NAME' is not a valid semver (expected e.g. v1.2.3 or 1.2.3-beta.1)."
-            exit 1
-          fi
-          CURRENT="$(node -p "require('./package.json').version")"
-          echo "Release tag:               $TAG_NAME"
-          echo "Resolved version:          $VERSION"
-          echo "package.json before sync:  $CURRENT"
-          npm version "$VERSION" --no-git-tag-version --allow-same-version
-          echo "package.json after sync:   $(node -p "require('./package.json').version")"
+          node <<'JS'
+          const assert = require('node:assert/strict');
+          const pkg = require('./package.json');
+          const lock = require('./package-lock.json');
+          assert.equal(pkg.name, 'hexo-tts-reader');
+          assert.equal(pkg.version, process.env.RELEASE_VERSION);
+          assert.equal(lock.version, pkg.version);
+          assert.equal(lock.packages[''].version, pkg.version);
+          JS
 
       - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - run: npm test
+      - name: Publish using npm trusted publishing
+        run: npm publish --access public --registry=https://registry.npmjs.org/

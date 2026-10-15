@@ -14,7 +14,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "release:setup": "node scripts/setup-npm-trust.cjs"
   },
   "keywords": [
     "hexo",
