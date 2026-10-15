@@ -60,7 +60,7 @@ function main() {
   }
   console.log('\nTrusted publishing configured. Complete the first publish within 2 days.');
   console.log('For a release not yet on npm, run Node.js Package on main with its tag input.');
-  console.log('Future stable GitHub Releases will publish automatically without NPM_TOKEN.');
+  console.log('GitHub Releases prefer NPM_TOKEN; this trust binding is used only after token authentication fails.');
 }
 
 try {

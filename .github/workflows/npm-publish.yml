@@ -73,5 +73,75 @@ jobs:
 
       - run: npm ci
       - run: npm test
-      - name: Publish using npm trusted publishing
-        run: npm publish --access public --registry=https://registry.npmjs.org/
+      - name: Publish with token first, OIDC on authentication failure
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          node <<'JS'
+          const { spawnSync } = require('node:child_process');
+          const registry = '--registry=https://registry.npmjs.org/';
+          const tokenEnv = { ...process.env };
+          // npm prefers OIDC when available, so hide it during the token attempt.
+          delete tokenEnv.ACTIONS_ID_TOKEN_REQUEST_URL;
+          delete tokenEnv.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
+          const oidcEnv = { ...process.env, NODE_AUTH_TOKEN: '' };
+          delete oidcEnv.NPM_TOKEN;
+
+          function run(args, env) {
+            const result = spawnSync('npm', [...args, registry], {
+              env, encoding: 'utf8', timeout: 300000, maxBuffer: 8 * 1024 * 1024,
+            });
+            if (result.error) throw result.error;
+            if (result.signal) throw new Error(`npm was interrupted: ${result.signal}`);
+            return result;
+          }
+          function errorCode(result) {
+            try {
+              const code = JSON.parse(result.stdout).error?.code;
+              if (code) return code;
+            } catch {}
+            return result.stderr.match(/npm (?:error|ERR!) code (\w+)/)?.[1];
+          }
+          function invalidAuth(result) {
+            return result.status !== 0 && ['E401', 'ENEEDAUTH'].includes(errorCode(result));
+          }
+          function report(result) {
+            process.stdout.write(result.stdout || '');
+            process.stderr.write(result.stderr || '');
+          }
+          function fallback() {
+            console.log('::warning::NPM_TOKEN authentication failed. Trying trusted publishing.');
+            console.log('OIDC requires an active npm binding for xichenx/hexo-tts-reader / npm-publish.yml.');
+            const result = run(['publish', '--access=public'], oidcEnv);
+            report(result);
+            process.exitCode = result.status;
+          }
+          function main() {
+            if (!tokenEnv.NODE_AUTH_TOKEN?.trim()) {
+              throw new Error('NPM_TOKEN is missing. Configure the repository secret before publishing.');
+            }
+            const auth = run(['whoami', '--json'], tokenEnv);
+            if (invalidAuth(auth)) return fallback();
+            if (auth.status !== 0) {
+              report(auth);
+              throw new Error('Token check failed without an authentication error; OIDC fallback was not used.');
+            }
+            console.log('NPM_TOKEN is valid. Publishing with token authentication.');
+            const published = run(['publish', '--access=public'], tokenEnv);
+            if (invalidAuth(published)) return fallback();
+            // E404 can hide an auth error, but can also mean missing package access.
+            // Retry via OIDC only if a fresh whoami confirms invalid credentials.
+            if (published.status !== 0 && errorCode(published) === 'E404') {
+              const recheck = run(['whoami', '--json'], tokenEnv);
+              if (invalidAuth(recheck)) return fallback();
+            }
+            report(published);
+            process.exitCode = published.status;
+          }
+          try {
+            main();
+          } catch (error) {
+            console.error(error.message);
+            process.exitCode = 1;
+          }
+          JS

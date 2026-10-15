@@ -1,10 +1,18 @@
 # Publishing to npm / npm 发布
 
-This repository publishes stable GitHub Releases with npm Trusted Publishing
-(OIDC). GitHub obtains short-lived credentials for each run; the workflow does
-not read `NPM_TOKEN`.
+This repository publishes stable GitHub Releases with `NPM_TOKEN` first.
+Confirmed token authentication failures fall back to npm Trusted Publishing (OIDC).
 
-## 一次性配置
+## 发布策略
+
+- 保留 GitHub Actions Secret `NPM_TOKEN`，有效时始终使用它发布。
+- Token 路径隐藏 OIDC 环境，避免 npm 自动优先选择 OIDC。
+- `npm whoami` 或发布返回 `E401` / `ENEEDAUTH`（失效、过期或被撤销）时，才回退到 OIDC。
+- 发布返回 `E404` 时重新检查身份；只有确认凭据失效才回退。
+- 缺少 Secret、权限不足、2FA、版本冲突、网络错误直接失败，不自动换认证方式。
+- OIDC 回退不会携带 `NPM_TOKEN`；需要 npm 端已有有效信任绑定。
+
+## 配置 OIDC 备用通道
 
 在仓库根目录运行（配置工具需要 Node.js 24、npm >=11.15）：
 
@@ -28,8 +36,9 @@ npm run release:setup             # 检查登录并调用 npm trust
 | Environment name | 留空 |
 | Allowed actions | 允许 `npm publish` |
 
-新绑定需要在 **2 天内完成首次发布**。首次成功后，后续发布无需定期更换 Token。
-确认 OIDC 发布成功后，可以删除 GitHub 中不再使用的 `NPM_TOKEN` Secret。
+新绑定需要在 **2 天内通过该绑定完成首次发布**，使用 Token 发布不算激活 OIDC。
+因此不要提前创建一个长期闲置的备用绑定：应在需要 OIDC 发布时配置并及时使用。
+未激活或已过期的绑定无法兜底，需重新配置。绑定激活后仍保留 `NPM_TOKEN`，维持 Token 优先策略。
 
 ## 发布与补发
 
@@ -41,14 +50,15 @@ npm run release:setup             # 检查登录并调用 npm trust
 
 1. 打开 [Node.js Package workflow](https://github.com/xichenx/hexo-tts-reader/actions/workflows/npm-publish.yml)。
 2. 点击 **Run workflow**，选择 **main**，`tag` 填写 `v0.2.0`。
-3. 工作流使用 main 上的新发布配置，检出并测试该标签的代码，然后通过 OIDC 发布。
+3. 工作流使用 main 上的新发布配置，检出并测试该标签的代码，然后按 Token 优先、认证失效才回退的策略发布。
 
 不要重新运行迁移前失败的旧任务：它仍使用旧版 Token 配置。
 不需要移动标签或重新创建 Release。npm 已存在的版本无法覆盖。
 
 ## English quick reference
 
-Run `npm run release:setup` once with Node.js 24 and npm >=11.15. Complete npm
+Keep the repository `NPM_TOKEN` secret. To configure the OIDC fallback, run
+`npm run release:setup` with Node.js 24 and npm >=11.15. Complete npm
 login and 2FA as a package maintainer. Alternatively, enter the settings in the
 table above on npm. Enable direct publishing (`npm publish`) and leave the
 GitHub environment blank.

@@ -400,8 +400,8 @@ npm test
 
 测试使用 Node 内置测试运行器（`node --test`）。
 
-维护者发布：运行 `npm run release:setup` 完成一次性 npm 信任绑定，后续由 GitHub
-Actions 自动发布，无需维护 `NPM_TOKEN`。详见[发布指南](./docs/PUBLISHING.md)。
+维护者发布：GitHub Actions 优先使用 `NPM_TOKEN`，确认凭据失效后才回退到 OIDC。
+`npm run release:setup` 用于配置备用信任绑定。详见[发布指南](./docs/PUBLISHING.md)。
 
 ---
 

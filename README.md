@@ -425,8 +425,9 @@ npm test
 
 Tests use the built-in Node test runner (`node --test`).
 
-Maintainers: run `npm run release:setup` once to configure npm trusted publishing.
-GitHub Actions then publishes without a long-lived `NPM_TOKEN`. See the
+Maintainers: GitHub Actions prefers `NPM_TOKEN` and falls back to OIDC only after
+a confirmed authentication failure. Use `npm run release:setup` to configure the
+backup trust binding. See the
 [publishing guide](./docs/PUBLISHING.md).
 
 ---
