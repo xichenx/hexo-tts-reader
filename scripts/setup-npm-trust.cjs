@@ -59,7 +59,7 @@ function main() {
     throw new Error('Trust setup did not complete. Check the npm error above. Existing trust configurations were not removed by this helper.');
   }
   console.log('\nTrusted publishing configured. Complete the first publish within 2 days.');
-  console.log('For v0.2.0, run Node.js Package on main with the tag input v0.2.0.');
+  console.log('For a release not yet on npm, run Node.js Package on main with its tag input.');
   console.log('Future stable GitHub Releases will publish automatically without NPM_TOKEN.');
 }
 
